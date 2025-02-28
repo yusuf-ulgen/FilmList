@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".logIn">
+
+    <EditText
+        android:id="@+id/login_mail_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="196dp"
+        android:layout_marginEnd="24dp"
+        android:ems="10"
+        android:hint="E-mail"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/login_giris_id"
+        android:layout_width="185dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#099913"
+        android:text="Giriş"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_sifre_id"
+        app:layout_constraintVertical_bias="0.227" />
+
+    <TextView
+        android:id="@+id/login_textView2"
+        android:layout_width="127dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="52dp"
+        android:text="Şifre: "
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_textView" />
+
+    <TextView
+        android:id="@+id/login_textView"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="196dp"
+        android:text="Kullanıcı Maili: "
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/login_sifre_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:ems="10"
+        android:hint="Şifre: "
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintStart_toEndOf="@+id/login_textView2"
+        app:layout_constraintTop_toBottomOf="@+id/login_mail_id" />
+
+    <CheckBox
+        android:id="@+id/benihatirla_id"
+        android:layout_width="204dp"
+        android:layout_height="44dp"
+        android:text="Beni Hatırla"
+        app:layout_constraintBottom_toTopOf="@+id/login_giris_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.096"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_textView2"
+        app:layout_constraintVertical_bias="0.571" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

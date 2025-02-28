@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".signUp">
+
+
+    <TextView
+        android:id="@+id/mailtext_id"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="148dp"
+        android:text="Kullanıcı Maili: "
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/mail_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="148dp"
+        android:layout_marginEnd="20dp"
+        android:ems="10"
+        android:hint="Mailinizi Giriniz"
+        android:inputType="text"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/mailtext_id"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sifretext_id"
+        android:layout_width="127dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="44dp"
+        android:text="Şifre: "
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mailtext_id" />
+
+
+    <EditText
+        android:id="@+id/sifre_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:hint="Şifrenizi Giriniz "
+        android:inputType="text"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.648"
+        app:layout_constraintStart_toEndOf="@+id/sifretext_id"
+        app:layout_constraintTop_toBottomOf="@+id/mail_id" />
+
+
+    <TextView
+        android:id="@+id/dogumyiliniztext_id"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="44dp"
+        android:text="Doğum Yılınız: "
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sifretext_id" />
+
+
+    <EditText
+        android:id="@+id/dogumyili_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:hint="dd.mm.yyyy"
+        android:inputType="text"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.925"
+        app:layout_constraintStart_toEndOf="@+id/dogumyiliniztext_id"
+        app:layout_constraintTop_toBottomOf="@+id/sifre_id" />
+
+
+    <!-- Spinner: Cinsiyet Seçimi -->
+    <Spinner
+        android:id="@+id/gender_spinner_id"
+        android:layout_width="128dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="44dp"
+        app:layout_constraintBottom_toTopOf="@+id/kaydet_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dogumyiliniztext_id"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/kaydet_id"
+        android:layout_width="185dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="196dp"
+        android:backgroundTint="#F60707"
+        android:text="Kaydol"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.777"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gender_spinner_id"
+        app:layout_constraintVertical_bias="0.369" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
