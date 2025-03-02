@@ -1,10 +1,10 @@
 package com.example.filmlist
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.VideoView
-import android.net.Uri
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -18,9 +18,14 @@ class MainActivity : AppCompatActivity() {
 
         // VideoView ile video oynatma
         val videoView: VideoView = findViewById(R.id.videoView_id)
-        val videoUri: Uri = Uri.parse("android.resource://" + packageName + "/" + R.raw.sample_video)
+        val videoUri: Uri = Uri.parse("android.resource://" + packageName + "/" + R.raw.videos)
         videoView.setVideoURI(videoUri)
         videoView.start()
+
+        // Video döngüye alma (Bitince tekrar başlat)
+        videoView.setOnCompletionListener {
+            videoView.start()
+        }
 
         // Sign Up butonuna tıklanması durumunda signUp'a yönlendirme
         val signUpButton: Button = findViewById(R.id.signup_button_id)
