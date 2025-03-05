@@ -1,5 +1,6 @@
 package com.example.filmlist
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import android.widget.Button
 
 class categories : AppCompatActivity() {
 
@@ -59,5 +61,13 @@ class categories : AppCompatActivity() {
 
         diziCategoryAdapter = CategoryAdapter(diziCategories)
         diziRecyclerView.adapter = diziCategoryAdapter
+
+        // Devam Et Butonuna Tıklama İşlevi
+        val continueButton = findViewById<Button>(R.id.continueButton)
+        continueButton.setOnClickListener {
+            // HomeScreen Activity'ye geçiş
+            val intent = Intent(this, HomeScreen::class.java)
+            startActivity(intent)
+        }
     }
 }

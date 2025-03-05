@@ -91,33 +91,29 @@
 
 
     <!-- Spinner: Cinsiyet Seçimi -->
+
     <Spinner
         android:id="@+id/gender_spinner_id"
         android:layout_width="128dp"
         android:layout_height="47dp"
-        android:layout_marginTop="44dp"
-        app:layout_constraintBottom_toTopOf="@+id/kaydet_id"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.07"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/dogumyiliniztext_id"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/dogumyiliniztext_id"
         app:layout_constraintTop_toBottomOf="@+id/dogumyiliniztext_id"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.093"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/kaydet_id"
         android:layout_width="185dp"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginBottom="196dp"
         android:backgroundTint="#F60707"
         android:text="Kaydol"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.777"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gender_spinner_id"
-        app:layout_constraintVertical_bias="0.369" />
+        app:layout_constraintTop_toBottomOf="@+id/dogumyili_id"
+        app:layout_constraintVertical_bias="0.336" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
