@@ -31,7 +31,7 @@ class logIn : AppCompatActivity() {
         // Kullanıcı zaten giriş yaptıysa, doğrudan profiling sayfasına yönlendir
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         if (prefs.getBoolean("is_logged_in", false)) {
-            val intent = Intent(this, profiling::class.java)
+            val intent = Intent(this, HomeScreen::class.java)
             startActivity(intent)
             finish()
         }
