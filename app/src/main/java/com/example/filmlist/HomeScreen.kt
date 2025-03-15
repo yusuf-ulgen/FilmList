@@ -12,6 +12,7 @@ class HomeScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_screen)
+        supportActionBar?.hide()
 
         // Keşfet Butonuna Tıklama İşlevi
         val homeButton = findViewById<ImageButton>(R.id.homeButton)

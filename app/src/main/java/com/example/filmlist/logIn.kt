@@ -21,6 +21,7 @@ class logIn : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         setContentView(R.layout.activity_log_in)
 
         mailEditText = findViewById(R.id.login_mail_id)

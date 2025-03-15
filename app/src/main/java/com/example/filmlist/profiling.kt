@@ -28,6 +28,7 @@ class profiling : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         setContentView(R.layout.activity_profiling)
 
         avatarImage = findViewById(R.id.avatar_image)

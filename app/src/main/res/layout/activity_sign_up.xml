@@ -81,7 +81,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="dd.mm.yyyy"
+        android:hint="ddmmyyyy"
         android:inputType="text"
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"

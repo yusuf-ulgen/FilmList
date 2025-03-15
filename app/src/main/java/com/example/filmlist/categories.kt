@@ -2,13 +2,14 @@ package com.example.filmlist
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.Button
 
 class categories : AppCompatActivity() {
 
@@ -20,6 +21,7 @@ class categories : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        supportActionBar?.hide()
         setContentView(R.layout.activity_categories)
 
         // Edge-to-edge padding handling
@@ -38,7 +40,7 @@ class categories : AppCompatActivity() {
         diziRecyclerView.layoutManager = LinearLayoutManager(this)
 
         // Film Kategorileri
-        val filmCategories = listOf(
+        val filmCategories = mutableListOf(
             Category("Aksiyon"), Category("Komedi"), Category("Dram"),
             Category("Macera"), Category("Bilim Kurgu"), Category("Gerilim"),
             Category("Romantik"), Category("Korku"), Category("Animasyon"),
@@ -47,7 +49,7 @@ class categories : AppCompatActivity() {
         )
 
         // Dizi Kategorileri
-        val diziCategories = listOf(
+        val diziCategories = mutableListOf(
             Category("Drama"), Category("Komedi"), Category("Aksiyon"),
             Category("Romantik"), Category("Suç"), Category("Bilim Kurgu"),
             Category("Gerilim"), Category("Macera"), Category("Korku"),
@@ -65,9 +67,23 @@ class categories : AppCompatActivity() {
         // Devam Et Butonuna Tıklama İşlevi
         val continueButton = findViewById<Button>(R.id.continueButton)
         continueButton.setOnClickListener {
-            // HomeScreen Activity'ye geçiş
-            val intent = Intent(this, HomeScreen::class.java)
-            startActivity(intent)
+            // Film ve Dizi kategorilerinden en az 3 kategori seçildi mi?
+            val selectedFilmCategories = filmCategories.count { it.isSelected }
+            val selectedDiziCategories = diziCategories.count { it.isSelected }
+
+            if (selectedFilmCategories >= 3 && selectedDiziCategories >= 3) {
+                // HomeScreen Activity'ye geçiş
+                val intent = Intent(this, HomeScreen::class.java)
+                startActivity(intent)
+            } else {
+                // Film ve Dizi kategorileri için ayrı mesajlar
+                if (selectedFilmCategories < 3) {
+                    Toast.makeText(this, "Lütfen en az 3 film kategorisi seçin", Toast.LENGTH_SHORT).show()
+                }
+                if (selectedDiziCategories < 3) {
+                    Toast.makeText(this, "Lütfen en az 3 dizi kategorisi seçin", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 }

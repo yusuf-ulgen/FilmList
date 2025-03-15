@@ -6,6 +6,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Patterns
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -23,6 +25,7 @@ class signUp : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
         setContentView(R.layout.activity_sign_up)
 
         mailEditText = findViewById(R.id.mail_id)
@@ -100,6 +103,55 @@ class signUp : AppCompatActivity() {
                 Toast.makeText(this, "Lütfen tüm alanları doldurun.", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Doğum tarihi için TextWatcher ekleyelim
+        dogumtarihieditText.addTextChangedListener(object : TextWatcher {
+            var isUpdating = false  // Bu değişken, döngüyü engellemek için kullanılıyor.
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdating) return  // Eğer metin güncelleniyorsa, geri çık.
+                isUpdating = true  // Metni güncellemeye başladık.
+
+                val text = s.toString()
+
+                // Sadece rakamları al
+                var cleanText = text.replace("[^\\d]".toRegex(), "")
+
+                // Eğer 8 karakterden fazla yazılmışsa, ilk 8 karakteri al
+                if (cleanText.length > 8) {
+                    cleanText = cleanText.substring(0, 8)
+                }
+
+                // Format: dd.mm.yyyy
+                var formattedText = ""
+
+                if (cleanText.length in 3..4) {
+                    formattedText = cleanText.substring(0, 2) + "." + cleanText.substring(2)
+                } else if (cleanText.length in 5..6) {
+                    // Eğer 6'dan az uzunluktaysa, substring(4) hata verebilir
+                    formattedText = cleanText.substring(0, 2) + "." + cleanText.substring(2, Math.min(cleanText.length, 4)) + "." + cleanText.substring(4)
+                } else if (cleanText.length >= 7) {
+                    // Eğer 7'den büyükse, doğru şekilde substring alınacak
+                    formattedText = cleanText.substring(0, 2) + "." + cleanText.substring(2, 4) + "." + cleanText.substring(4, Math.min(cleanText.length, 8))
+                } else {
+                    formattedText = cleanText
+                }
+
+                // Eğer formatlandıysa text'i güncelle
+                if (formattedText != text) {
+                    dogumtarihieditText.setText(formattedText)
+                    // Cursor'u sona yerleştir
+                    dogumtarihieditText.setSelection(formattedText.length)
+                }
+
+                isUpdating = false  // Güncelleme tamamlandı.
+            }
+
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
     }
 
     // Ayın geçerli gün sayısını kontrol eden fonksiyon
