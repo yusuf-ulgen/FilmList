@@ -43,40 +43,32 @@ class profiling : AppCompatActivity() {
         }
 
 
-        // Devam Et butonuna tıklanırsa
         devamEtButton.setOnClickListener {
             val nickname = nicknameEditText.text.toString()
 
             if (nickname.isNotEmpty()) {
-                // Nickname'i kaydediyoruz
                 val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
                 prefs.edit().putString("user_nickname", nickname).apply()
 
-                // Avatar seçilmemişse default avatarı ekliyoruz
                 if (avatarImage.drawable == null) {
                     avatarImage.setImageResource(R.drawable.ic_profile)  // Default avatar
                 }
 
-                // Profiling'den CategoriesActivity'ye geçiş
                 val intent = Intent(this, categories::class.java)
                 startActivity(intent)
                 finish()
             } else {
-                // Nickname boşsa hata mesajı göster
                 nicknameEditText.error = "Lütfen nickname girin."
             }
         }
 
-        // Avatar'a tıklanarak bir görsel seçme işlemi
         avatarImage.setOnClickListener {
-            // Eğer kullanıcı izni her zaman vermişse, doğrudan galeriyi açıyoruz
             val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
             val isPermissionGranted = prefs.getBoolean(KEY_PERMISSION_GRANTED, false)
 
             if (isPermissionGranted) {
                 openGallery()
             } else {
-                // Eğer izin verilmediyse, kullanıcıdan izin istiyoruz
                 requestGalleryPermission()
             }
         }
