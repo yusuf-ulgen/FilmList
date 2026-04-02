@@ -9,11 +9,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.filmlist.data.local.AppDatabase
-import com.example.filmlist.data.local.SessionManager
-import com.example.filmlist.data.repository.AuthRepository
 import com.example.filmlist.databinding.ActivityUserListBinding
 import com.example.filmlist.ui.ViewModelFactory
+import com.example.filmlist.util.RepositoryProvider
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -42,9 +40,7 @@ class UserListActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val database = AppDatabase.getDatabase(this)
-        val sessionManager = SessionManager(this)
-        val factory = ViewModelFactory(AuthRepository(database.userDao(), sessionManager))
+        val factory = RepositoryProvider.provideViewModelFactory(this)
         viewModel = ViewModelProvider(this, factory)[UserListViewModel::class.java]
     }
 

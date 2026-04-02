@@ -21,54 +21,54 @@
 
         <activity
             android:name=".ui.detail.MovieDetailActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.add.AddShowActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.add.AddFilmActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.profile.ProfileActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.users.UserListActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.add.AddContentActivity"
             android:exported="false" />
         <activity
             android:name=".ui.chat.AiChatActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.home.HomeScreen"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.categories.CategoriesActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.profile.ProfilingActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.auth.SignUpActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".ui.auth.LoginActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:theme="@style/Theme.FilmList"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

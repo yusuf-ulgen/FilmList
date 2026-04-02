@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.filmlist.data.local.AppDatabase
 import com.example.filmlist.data.local.SessionManager
 import com.example.filmlist.data.repository.AuthRepository
+import com.example.filmlist.data.repository.ChatRepository
 import com.example.filmlist.data.repository.MovieRepository
 import com.example.filmlist.ui.ViewModelFactory
 

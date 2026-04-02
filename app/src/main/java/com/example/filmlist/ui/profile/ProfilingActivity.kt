@@ -14,7 +14,8 @@ import com.example.filmlist.data.local.AppDatabase
 import com.example.filmlist.data.local.SessionManager
 import com.example.filmlist.databinding.ActivityProfilingBinding
 import com.example.filmlist.ui.auth.LoginActivity
-import com.example.filmlist.ui.auth.ViewModelFactory
+import com.example.filmlist.ui.ViewModelFactory
+import com.example.filmlist.util.RepositoryProvider
 import com.example.filmlist.ui.categories.CategoriesActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -53,10 +54,7 @@ class ProfilingActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val database = AppDatabase.getDatabase(this)
-        val sessionManager = SessionManager(this)
-        val factory = ViewModelFactory(AuthRepository(database.userDao(), sessionManager))
-        // Note: Using AuthRepository for simple UserDao access here for simplicity, or create a specific ProfileRepository
+        val factory = RepositoryProvider.provideViewModelFactory(this)
         viewModel = ViewModelProvider(this, factory)[ProfilingViewModel::class.java]
     }
 

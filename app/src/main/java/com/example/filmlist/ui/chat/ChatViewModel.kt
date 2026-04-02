@@ -46,7 +46,7 @@ class ChatViewModel(
     fun getRecommendations() {
         viewModelScope.launch {
             val userId = authRepository.sessionManager.userId.first()
-            if (userId != -1L) {
+            if (userId != null && userId != -1L) {
                 _isLoading.value = true
                 val userMovies = authRepository.userDao.getUserMediaContentSync(userId).map { it.title }
                 val response = chatRepository.getRecommendations(userMovies)
