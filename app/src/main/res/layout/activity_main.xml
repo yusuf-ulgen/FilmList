@@ -1,51 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/main">
+    android:layout_height="match_parent">
 
-    <!-- VideoView (Arkaplan Videosu) -->
-    <VideoView
-        android:id="@+id/videoView_id"
+    <ImageView
+        android:id="@+id/welcome_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/welcome_bg" />
 
-    <!-- Sağ Üst Köşeye Butonları Yerleştiren Container -->
-    <LinearLayout
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000" />
+
+    <TextView
+        android:id="@+id/welcome_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:gravity="end"
-        android:orientation="horizontal"
-        android:padding="10dp">
+        android:layout_marginBottom="8dp"
+        android:text="FilmList"
+        android:textColor="@color/white"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_subtitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Sign Up Butonu -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/signup_button_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_red"
-            android:backgroundTint="@null"
-            android:stateListAnimator="@null"
-            android:text="Sign up"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+    <TextView
+        android:id="@+id/welcome_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="48dp"
+        android:layout_marginBottom="48dp"
+        android:gravity="center"
+        android:text="Sinemanın tüm renklerini keşfedin. AI destekli önerilerle yolunuzu bulun."
+        android:textColor="@color/gray_text"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/signup_button_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Log In Butonu -->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/login_button_id"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
-            android:background="@drawable/rounded_green"
-            android:backgroundTint="@null"
-            android:stateListAnimator="@null"
-            android:text="Log in"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/signup_button_id"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="Hemen Başla"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:backgroundTint="@color/secondary"
+        app:cornerRadius="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/login_button_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/login_button_id"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginBottom="48dp"
+        android:text="Giriş Yap"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:backgroundTint="@android:color/transparent"
+        android:textColor="@color/white"
+        app:strokeColor="@color/white"
+        app:strokeWidth="1dp"
+        app:cornerRadius="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

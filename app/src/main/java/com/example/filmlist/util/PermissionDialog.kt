@@ -1,15 +1,14 @@
-package com.example.filmlist
+package com.example.filmlist.util
 
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.appcompat.app.AlertDialog
-import android.content.DialogInterface
 
 class PermissionDialog : DialogFragment() {
     interface PermissionListener {
         fun onPermissionGranted(chooseAlways: Boolean)
         fun onPermissionDenied()
-        fun onPermissionChangeRequested()  // İzin durumu değiştirme isteği
+        fun onPermissionChangeRequested()
     }
 
     private var permissionListener: PermissionListener? = null
@@ -33,10 +32,6 @@ class PermissionDialog : DialogFragment() {
 
         builder.setNegativeButton("İzin Verme") { dialog, id ->
             permissionListener?.onPermissionDenied()
-        }
-
-        builder.setPositiveButton("Her Zaman İzin Ver") { dialog, id ->
-            permissionListener?.onPermissionChangeRequested() // İzin değiştirme talebi
         }
 
         return builder.create()

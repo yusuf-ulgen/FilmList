@@ -1,11 +1,21 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 android {
     namespace = "com.example.filmlist"
     compileSdk = 35
+
+    val localProperties = java.util.Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.inputStream())
+    }
+
+    val tmdbKey = localProperties.getProperty("TMDB_API_KEY") ?: "\"\""
+    val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "\"\""
 
     defaultConfig {
         applicationId = "com.example.filmlist"
@@ -15,6 +25,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "TMDB_API_KEY", tmdbKey)
+        buildConfigField("String", "GEMINI_API_KEY", geminiKey)
     }
 
     buildTypes {
@@ -33,6 +46,11 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -43,6 +61,29 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.preference.ktx)
+
+    # Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt(libs.androidx.room.compiler)
+
+    # DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    # Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+
+    # Gemini
+    implementation(libs.google.generativeai)
+
+    # Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    # Lifecycle (ViewModel, LiveData)
+    implementation(libs.androidx.lifecycle.viewmodel-ktx)
+    implementation(libs.androidx.lifecycle.livedata-ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
