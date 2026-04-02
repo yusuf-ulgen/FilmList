@@ -27,4 +27,13 @@ class ChatRepository {
             null
         }
     }
+
+    suspend fun getRecommendations(userMovies: List<String>): String? {
+        val prompt = if (userMovies.isEmpty()) {
+            "Bana izleyebileceğim popüler ve kaliteli bir film/dizi önerir misin?"
+        } else {
+            "Şu anki listemde şunlar var: ${userMovies.joinToString(", ")}. Bu listeye dayanarak bana benzer tarzlarda 3 adet yeni film veya dizi önerir misin? Neden önermek istediğini de kısaca açıkla."
+        }
+        return sendMessage(prompt)
+    }
 }

@@ -108,9 +108,7 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val database = AppDatabase.getDatabase(this)
-        val sessionManager = SessionManager(this)
-        val factory = ViewModelFactory(AuthRepository(database.userDao(), sessionManager))
+        val factory = com.example.filmlist.util.RepositoryProvider.provideViewModelFactory(this)
         viewModel = ViewModelProvider(this, factory)[SignUpViewModel::class.java]
     }
 

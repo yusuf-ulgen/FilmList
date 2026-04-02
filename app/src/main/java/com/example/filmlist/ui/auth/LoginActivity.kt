@@ -43,10 +43,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val database = AppDatabase.getDatabase(this)
-        val sessionManager = SessionManager(this)
-        val repository = AuthRepository(database.userDao(), sessionManager)
-        val factory = ViewModelFactory(repository)
+        val factory = com.example.filmlist.util.RepositoryProvider.provideViewModelFactory(this)
         viewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
     }
 

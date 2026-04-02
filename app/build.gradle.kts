@@ -16,8 +16,8 @@ android {
         localProperties.load(localPropertiesFile.inputStream())
     }
 
-    val tmdbKey = localProperties.getProperty("TMDB_API_KEY") ?: "YOUR_TMDB_API_KEY_HERE\""
-    val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "YOUR_GEMINI_API_KEY_HERE\""
+    val tmdbKey = localProperties.getProperty("TMDB_API_KEY") ?: "YOUR_TMDB_API_KEY_HERE"
+    val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "YOUR_GEMINI_API_KEY_HERE"
 
     defaultConfig {
         applicationId = "com.example.filmlist"
@@ -85,6 +85,9 @@ dependencies {
     // Lifecycle (ViewModel, LiveData)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // Coil
+    implementation(libs.coil)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
