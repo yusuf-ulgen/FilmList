@@ -26,4 +26,7 @@ interface UserDao {
 
     @Query("SELECT * FROM media_content WHERE userId = :userId ORDER BY id DESC")
     fun getUserMediaContent(userId: Long): Flow<List<MediaContent>>
+
+    @Query("SELECT * FROM media_content WHERE userId = :userId")
+    suspend fun getUserMediaContentSync(userId: Long): List<MediaContent>
 }

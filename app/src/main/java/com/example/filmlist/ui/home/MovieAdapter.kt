@@ -3,7 +3,7 @@ package com.example.filmlist.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.load
 import com.example.filmlist.data.remote.Movie
 import com.example.filmlist.databinding.ItemMovieBinding
 
@@ -29,10 +29,21 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
         holder.binding.movieTitle.text = movie.title
         holder.binding.movieRating.text = "⭐ ${movie.voteAverage}"
         
-        Glide.with(holder.itemView.context)
-            .load(movie.getFullPosterUrl())
-            .centerCrop()
-            .into(holder.binding.moviePoster)
+        holder.binding.moviePoster.load(movie.getFullPosterUrl()) {
+            crossfade(true)
+            placeholder(android.R.drawable.progress_indeterminate_horizontal)
+        }
+
+        holder.itemView.setOnClickListener {
+            val intent = android.content.Intent(holder.itemView.context, com.example.filmlist.ui.detail.MovieDetailActivity::class.java)
+            intent.putExtra("MOVIE_ID", movie.id)
+            intent.putExtra("MOVIE_TITLE", movie.title)
+            intent.putExtra("MOVIE_OVERVIEW", movie.overview)
+            intent.putExtra("MOVIE_RATING", movie.voteAverage)
+            intent.putExtra("MOVIE_DATE", movie.releaseDate)
+            intent.putExtra("MOVIE_POSTER", movie.posterPath)
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount() = movies.size

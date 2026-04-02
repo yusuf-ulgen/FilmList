@@ -28,12 +28,13 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
     fun getPopularMovies() {
         _isLoading.value = true
         viewModelScope.launch {
-            val movies = repository.getPopularMovies()
-            if (movies != null) {
-                _popularMovies.value = movies
-            } else {
-                _error.emit("Filmler yüklenemedi. Lütfen internetinizi kontrol edin.")
-            }
+            repository.getPopularMovies()
+                .onSuccess { movies ->
+                    _popularMovies.value = movies
+                }
+                .onFailure { exception ->
+                    _error.emit(exception.message ?: "Beklenmedik bir hata oluştu.")
+                }
             _isLoading.value = false
         }
     }

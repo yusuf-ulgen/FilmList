@@ -63,17 +63,21 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_today"
-                app:tint="@color/secondary" />
+                android:src="@drawable/ic_home"
+                app:tint="@color/premium_gold" />
 
             <ImageButton
                 android:id="@+id/aiButton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/btn_star"
+                android:src="@drawable/ic_ai"
                 app:tint="@color/white" />
 
             <ImageButton
@@ -81,8 +85,10 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_input_add"
+                android:src="@drawable/ic_add"
                 app:tint="@color/white" />
 
             <ImageButton
@@ -90,8 +96,10 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_sort_by_size"
+                android:src="@drawable/ic_list"
                 app:tint="@color/white" />
 
             <ImageButton
@@ -99,8 +107,10 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
+                android:padding="12dp"
+                android:scaleType="fitCenter"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_myplaces"
+                android:src="@drawable/ic_profile"
                 app:tint="@color/white" />
 
         </LinearLayout>

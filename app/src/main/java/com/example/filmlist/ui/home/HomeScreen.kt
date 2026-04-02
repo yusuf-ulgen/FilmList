@@ -56,12 +56,7 @@ class HomeScreen : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val repository = MovieRepository()
-        val factory = object : ViewModelProvider.Factory {
-            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(repository) as T
-            }
-        }
+        val factory = com.example.filmlist.util.RepositoryProvider.provideViewModelFactory(this)
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
     }
 

@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.filmlist.data.repository.ChatRepository
 import com.example.filmlist.databinding.ActivityAiChatBinding
+import com.example.filmlist.util.RepositoryProvider
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -42,15 +42,14 @@ class AiChatActivity : AppCompatActivity() {
                 binding.messageEditText.text.clear()
             }
         }
+
+        binding.recommendationButton.setOnClickListener {
+            viewModel.getRecommendations()
+        }
     }
 
     private fun setupViewModel() {
-        val repository = ChatRepository()
-        val factory = object : ViewModelProvider.Factory {
-            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                return ChatViewModel(repository) as T
-            }
-        }
+        val factory = RepositoryProvider.provideViewModelFactory(this)
         viewModel = ViewModelProvider(this, factory)[ChatViewModel::class.java]
     }
 
@@ -67,6 +66,8 @@ class AiChatActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.isLoading.collectLatest { isLoading ->
                 binding.progressBar.visibility = if (isLoading) android.view.View.VISIBLE else android.view.View.GONE
+                binding.recommendationButton.isEnabled = !isLoading
+                binding.sendButton.isEnabled = !isLoading
             }
         }
 
