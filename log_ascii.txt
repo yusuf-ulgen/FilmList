@@ -1,0 +1,181 @@
+Initialized native services in: C:\Users\gencs\.gradle\native
+Initialized jansi services in: C:\Users\gencs\.gradle\native
+Received JVM installation metadata from 'C:\Program Files\Eclipse Adoptium\jdk-8.0.482.8-hotspot': {JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-8.0.482.8-hotspot\jre, JAVA_VERSION=1.8.0_482, JAVA_VENDOR=Temurin, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=1.8.0_482-b08, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=25.482-b08, VM_VENDOR=Temurin, OS_ARCH=amd64}
+Checking if the launcher JVM can be re-used for build. To be re-used, the launcher JVM needs to match the parameters required for the build process: -Xmx2048m -Dfile.encoding=UTF-8 -Duser.country=TR -Duser.language=tr -Duser.variant
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.7/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Starting process 'Gradle build daemon'. Working directory: C:\Users\gencs\.gradle\daemon\8.7 Command: C:\Program Files\Eclipse Adoptium\jdk-8.0.482.8-hotspot\bin\java.exe -Xmx2048m -Dfile.encoding=UTF-8 -Duser.country=TR -Duser.language=tr -Duser.variant -cp C:\Users\gencs\.gradle\wrapper\dists\gradle-8.7-bin\bhs2wmbdwecv87pi65oeuq5iu\gradle-8.7\lib\gradle-launcher-8.7.jar -javaagent:C:\Users\gencs\.gradle\wrapper\dists\gradle-8.7-bin\bhs2wmbdwecv87pi65oeuq5iu\gradle-8.7\lib\agents\gradle-instrumentation-agent-8.7.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.7
+Successfully started process 'Gradle build daemon'
+An attempt to start the daemon took 1.652 secs.
+The client will now receive all logging from the daemon (pid: 20528). The daemon log file: C:\Users\gencs\.gradle\daemon\8.7\daemon-20528.out.log
+Daemon will be stopped at the end of the build 
+Using 8 worker leases.
+Received JVM installation metadata from 'C:\Program Files\Eclipse Adoptium\jdk-8.0.482.8-hotspot': {JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-8.0.482.8-hotspot\jre, JAVA_VERSION=1.8.0_482, JAVA_VENDOR=Temurin, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=1.8.0_482-b08, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=25.482-b08, VM_VENDOR=Temurin, OS_ARCH=amd64}
+Watching the file system is configured to be enabled if available
+Now considering [C:\projects\FilmList] as hierarchies to watch
+File system watching is active
+Starting Build
+Settings evaluated using settings file 'C:\projects\FilmList\settings.gradle.kts'.
+Projects loaded. Root project using build file 'C:\projects\FilmList\build.gradle.kts'.
+Included projects: [root project 'FilmList', project ':app']
+
+> Configure project :
+Evaluating root project 'FilmList' using build file 'C:\projects\FilmList\build.gradle.kts'.
+./gradlew : 
+At line:1 char:1
++ ./gradlew assembleDebug 
+--no-daemon --info > log.t
+xt 2>&1; Select-Str ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (:  
+  String) [], RemoteExc   
+ eption
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+FAILURE: Build failed with
+ an exception.
+
+* What went wrong:
+A problem occurred configu
+ring root project 'FilmLis
+t'.
+> Could not resolve all ar
+tifacts for configuration 
+':classpath'.
+   > Could not resolve com
+.android.tools.build:gradl
+e:8.6.0.
+     Required by:
+         project : > com.a
+ndroid.application:com.and
+roid.application.gradle.pl
+ugin:8.6.0
+      > No matching varian
+t of com.android.tools.bui
+ld:gradle:8.6.0 was found.
+ The consumer was configur
+ed to find a library for u
+se during runtime, compati
+ble with Java 8, packaged 
+as a jar, and its dependen
+cies declared externally, 
+as well as attribute 'org.
+gradle.plugin.api-version'
+ with value '8.7' but:
+          - Variant 'apiEl
+ements' declares a library
+, packaged as a jar, and i
+ts dependencies declared e
+xternally:
+              - Incompatib
+le because this component 
+declares a component for u
+se during compile-time, co
+mpatible with Java 11 and 
+the consumer needed a comp
+onent for use during runti
+me, compatible with Java 8
+              - Other comp
+atible attribute:
+                  - Doesn'
+t say anything about org.g
+radle.plugin.api-version (
+required '8.7')
+          - Variant 'javad
+ocElements' declares a com
+ponent for use during runt
+ime, and its dependencies 
+declared externally:
+              - Incompatib
+le because this component 
+declares documentation and
+ the consumer needed a lib
+rary
+              - Other comp
+atible attributes:
+                  - Doesn'
+t say anything about its e
+lements (required them pac
+kaged as a jar)
+                  - Doesn'
+t say anything about its t
+arget Java version (requir
+ed compatibility with Java
+ 8)
+                  - Doesn'
+t say anything about org.g
+radle.plugin.api-version (
+required '8.7')
+          - Variant 'runti
+meElements' declares a lib
+rary for use during runtim
+e, packaged as a jar, and 
+its dependencies declared 
+externally:
+              - Incompatib
+le because this component 
+declares a component, comp
+atible with Java 11 and th
+e consumer needed a compon
+ent, compatible with Java 
+8
+              - Other comp
+atible attribute:
+                  - Doesn'
+t say anything about org.g
+radle.plugin.api-version (
+required '8.7')
+          - Variant 'sourc
+esElements' declares a com
+ponent for use during runt
+ime, and its dependencies 
+declared externally:
+              - Incompatib
+le because this component 
+declares documentation and
+ the consumer needed a lib
+rary
+              - Other comp
+atible attributes:
+                  - Doesn'
+t say anything about its e
+lements (required them pac
+kaged as a jar)
+                  - Doesn'
+t say anything about its t
+arget Java version (requir
+ed compatibility with Java
+ 8)
+                  - Doesn'
+t say anything about org.g
+radle.plugin.api-version (
+required '8.7')
+
+* Try:
+> Review the variant match
+ing algorithm at https://d
+ocs.gradle.org/8.7/usergui
+de/variant_attributes.html
+#sec:abm_algorithm.
+> No matching variant erro
+rs are explained in more d
+etail at https://docs.grad
+le.org/8.7/userguide/varia
+nt_model.html#sub:variant-
+no-match.
+Watched directory hierarchies: [C:\projects\FilmList]
+> Run with --stacktrace op
+tion to get the stack trac
+e.
+> Run with --debug option 
+to get more log output.
+> Run with --scan to get f
+ull insights.
+> Get more help at https:/
+/help.gradle.org.
+
+BU?LD FAILED in 5s

@@ -1,0 +1,160 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.7/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+.\gradlew : 
+At line:1 char:1
++ .\gradlew assembleDebug 
+--no-daemon 2>&1 | Out-Fil
+e -Encoding ASCII l ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
+    + CategoryInfo        
+      : NotSpecified: (:  
+  String) [], RemoteExc   
+ eption
+    + FullyQualifiedError 
+   Id : NativeCommandErr  
+  or
+ 
+FAILURE: Build failed with
+ an exception.
+
+* What went wrong:
+A problem occurred configu
+ring root project 'FilmLis
+t'.
+> Could not resolve all ar
+tifacts for configuration 
+':classpath'.
+   > Could not resolve com
+.android.tools.build:gradl
+e:8.6.0.
+     Required by:
+         project : > com.a
+ndroid.application:com.and
+roid.application.gradle.pl
+ugin:8.6.0
+      > No matching varian
+t of com.android.tools.bui
+ld:gradle:8.6.0 was found.
+ The consumer was configur
+ed to find a library for u
+se during runtime, compati
+ble with Java 8, packaged 
+as a jar, and its dependen
+cies declared externally, 
+as well as attribute 'org.
+gradle.plugin.api-version'
+ with value '8.7' but:
+          - Variant 'apiEl
+ements' declares a library
+, packaged as a jar, and i
+ts dependencies declared e
+xternally:
+              - Incompatib
+le because this component 
+declares a component for u
+se during compile-time, co
+mpatible with Java 11 and 
+the consumer needed a comp
+onent for use during runti
+me, compatible with Java 8
+              - Other comp
+atible attribute:
+                  - Doesn'
+t say anything about org.g
+radle.plugin.api-version (
+required '8.7')
+          - Variant 'javad
+ocElements' declares a com
+ponent for use during runt
+ime, and its dependencies 
+declared externally:
+              - Incompatib
+le because this component 
+declares documentation and
+ the consumer needed a lib
+rary
+              - Other comp
+atible attributes:
+                  - Doesn'
+t say anything about its e
+lements (required them pac
+kaged as a jar)
+                  - Doesn'
+t say anything about its t
+arget Java version (requir
+ed compatibility with Java
+ 8)
+                  - Doesn'
+t say anything about org.g
+radle.plugin.api-version (
+required '8.7')
+          - Variant 'runti
+meElements' declares a lib
+rary for use during runtim
+e, packaged as a jar, and 
+its dependencies declared 
+externally:
+              - Incompatib
+le because this component 
+declares a component, comp
+atible with Java 11 and th
+e consumer needed a compon
+ent, compatible with Java 
+8
+              - Other comp
+atible attribute:
+                  - Doesn'
+t say anything about org.g
+radle.plugin.api-version (
+required '8.7')
+          - Variant 'sourc
+esElements' declares a com
+ponent for use during runt
+ime, and its dependencies 
+declared externally:
+              - Incompatib
+le because this component 
+declares documentation and
+ the consumer needed a lib
+rary
+              - Other comp
+atible attributes:
+                  - Doesn'
+t say anything about its e
+lements (required them pac
+kaged as a jar)
+                  - Doesn'
+t say anything about its t
+arget Java version (requir
+ed compatibility with Java
+ 8)
+                  - Doesn'
+t say anything about org.g
+radle.plugin.api-version (
+required '8.7')
+
+* Try:
+> Review the variant match
+ing algorithm at https://d
+ocs.gradle.org/8.7/usergui
+de/variant_attributes.html
+#sec:abm_algorithm.
+> No matching variant erro
+rs are explained in more d
+etail at https://docs.grad
+le.org/8.7/userguide/varia
+nt_model.html#sub:variant-
+no-match.
+> Run with --stacktrace op
+tion to get the stack trac
+e.
+> Run with --info or --deb
+ug option to get more log 
+output.
+> Run with --scan to get f
+ull insights.
+> Get more help at https:/
+/help.gradle.org.
+
+BU?LD FAILED in 5s

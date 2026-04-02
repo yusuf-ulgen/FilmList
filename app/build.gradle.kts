@@ -16,8 +16,8 @@ android {
         localProperties.load(localPropertiesFile.inputStream())
     }
 
-    val tmdbKey = localProperties.getProperty("TMDB_API_KEY") ?: "\"\""
-    val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "\"\""
+    val tmdbKey = localProperties.getProperty("TMDB_API_KEY") ?: "YOUR_TMDB_API_KEY_HERE"
+    val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "YOUR_GEMINI_API_KEY_HERE"
 
     defaultConfig {
         applicationId = "com.example.filmlist"
@@ -28,8 +28,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "TMDB_API_KEY", tmdbKey)
-        buildConfigField("String", "GEMINI_API_KEY", geminiKey)
+        buildConfigField("String", "TMDB_API_KEY", "\"$tmdbKey\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
     }
 
     buildTypes {
