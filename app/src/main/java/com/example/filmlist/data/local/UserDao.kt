@@ -24,9 +24,28 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMediaContent(content: MediaContent): Long
 
+    @Delete
+    suspend fun deleteMediaContent(content: MediaContent)
+
     @Query("SELECT * FROM media_content WHERE userId = :userId ORDER BY id DESC")
     fun getUserMediaContent(userId: Long): Flow<List<MediaContent>>
 
     @Query("SELECT * FROM media_content WHERE userId = :userId")
     suspend fun getUserMediaContentSync(userId: Long): List<MediaContent>
+
+    // UserList operations
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUserList(userList: UserList): Long
+
+    @Update
+    suspend fun updateUserList(userList: UserList)
+
+    @Delete
+    suspend fun deleteUserList(userList: UserList)
+
+    @Query("SELECT * FROM user_lists WHERE userId = :userId ORDER BY orderIndex ASC")
+    fun getUserLists(userId: Long): Flow<List<UserList>>
+
+    @Query("SELECT * FROM media_content WHERE listId = :listId ORDER BY id DESC")
+    fun getUserMediaContentByList(listId: Long): Flow<List<MediaContent>>
 }

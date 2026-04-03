@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#1E1E1E">
+
+        <ImageView
+            android:id="@+id/postPoster"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:scaleType="centerCrop"
+            tools:src="@tools:sample/backgrounds/scenic" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/postTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Film Başlığı"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/postMetadata"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tür • 120 dk • Oyuncular"
+                android:textColor="@color/premium_gold"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/postDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bu film harika bir hikayeye sahip..."
+                android:textColor="#BDC3C7"
+                android:textSize="14sp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:layout_marginTop="8dp" />
+
+            <Button
+                android:id="@+id/watchTrailerButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="FRAGMANI İZLE"
+                android:drawableStart="@drawable/ic_ai"
+                android:drawablePadding="8dp"
+                android:backgroundTint="@color/secondary"
+                android:layout_marginTop="16dp"
+                style="@style/Widget.MaterialComponents.Button.Icon" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

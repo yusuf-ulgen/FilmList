@@ -10,6 +10,9 @@ class MovieRepository(private val movieDao: MovieDao) {
     private val apiKey = BuildConfig.TMDB_API_KEY
 
     suspend fun getPopularMovies(): Result<List<Movie>> {
+        if (apiKey == "YOUR_TMDB_API_KEY_HERE") {
+            return Result.failure(Exception("API anahtarı eksik! Lütfen local.properties dosyasını kontrol edin."))
+        }
         return try {
             val response = api.getPopularMovies(apiKey)
             if (response.results.isNotEmpty()) {

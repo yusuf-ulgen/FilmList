@@ -13,11 +13,14 @@ import com.example.filmlist.ui.categories.CategoriesViewModel
 import com.example.filmlist.ui.profile.ProfilingViewModel
 import com.example.filmlist.ui.add.AddContentViewModel
 import com.example.filmlist.ui.users.UserListViewModel
+import com.example.filmlist.data.repository.StatsRepository
+import com.example.filmlist.ui.profile.ProfileViewModel
 
 class ViewModelFactory(
     private val authRepository: AuthRepository,
     private val movieRepository: MovieRepository? = null,
-    private val chatRepository: ChatRepository? = null
+    private val chatRepository: ChatRepository? = null,
+    private val statsRepository: StatsRepository? = null
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
@@ -44,6 +47,9 @@ class ViewModelFactory(
             }
             modelClass.isAssignableFrom(UserListViewModel::class.java) -> {
                 UserListViewModel(authRepository.userDao, authRepository.sessionManager) as T
+            }
+            modelClass.isAssignableFrom(ProfileViewModel::class.java) -> {
+                ProfileViewModel(authRepository.userDao, authRepository.sessionManager, statsRepository!!) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

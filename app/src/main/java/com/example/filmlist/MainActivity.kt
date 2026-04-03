@@ -1,19 +1,18 @@
 package com.example.filmlist
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.example.filmlist.data.local.SessionManager
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.filmlist.databinding.ActivityMainBinding
-import com.example.filmlist.ui.auth.LoginActivity
-import com.example.filmlist.ui.auth.SignUpActivity
-import com.example.filmlist.ui.home.HomeScreen
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,23 +20,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        checkSessionAndNavigate()
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.navController
 
-        binding.loginButtonId.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
+        val bottomNav: BottomNavigationView = binding.bottomNavigation
+        bottomNav.setupWithNavController(navController)
 
-        binding.signupButtonId.setOnClickListener {
-            startActivity(Intent(this, SignUpActivity::class.java))
-        }
-    }
-
-    private fun checkSessionAndNavigate() {
-        val sessionManager = SessionManager(this)
-        lifecycleScope.launch {
-            if (sessionManager.isLoggedIn.first()) {
-                startActivity(Intent(this@MainActivity, HomeScreen::class.java))
-                finish()
+        // Title sync (optional)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            binding.navTitle.text = when(destination.id) {
+                R.id.navigation_home -> "Keşfet"
+                R.id.navigation_ai -> "Yapay Zeka"
+                R.id.navigation_add -> "Ekle"
+                R.id.navigation_list -> "Listeler"
+                R.id.navigation_profile -> "Profil"
+                else -> "FilmList"
             }
         }
     }

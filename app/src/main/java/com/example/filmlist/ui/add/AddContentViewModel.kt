@@ -2,49 +2,59 @@ package com.example.filmlist.ui.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.filmlist.data.local.MediaContent
-import com.example.filmlist.data.local.SessionManager
-import com.example.filmlist.data.local.UserDao
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.first
+import com.example.filmlist.data.local.*
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AddContentViewModel(
     private val userDao: UserDao,
     private val sessionManager: SessionManager
 ) : ViewModel() {
 
-    private val _contentSaved = MutableSharedFlow<Boolean>()
-    val contentSaved = _contentSaved.asSharedFlow()
+    private val _userLists = MutableStateFlow<List<UserList>>(emptyList())
+    val userLists = _userLists.asStateFlow()
+
+    private val _saveStatus = MutableSharedFlow<Boolean>()
+    val saveStatus = _saveStatus.asSharedFlow()
 
     private val _error = MutableSharedFlow<String>()
     val error = _error.asSharedFlow()
 
-    fun saveContent(
-        title: String,
-        type: String,
-        date: String,
-        rating: Int,
-        comment: String?,
-        isSpoiler: Boolean
-    ) {
+    init {
+        loadUserLists()
+    }
+
+    private fun loadUserLists() {
+        viewModelScope.launch {
+            val userId = sessionManager.userId.first()
+            if (userId != null) {
+                userDao.getUserLists(userId).collect {
+                    _userLists.value = it
+                }
+            }
+        }
+    }
+
+    fun saveMediaContent(title: String, type: String, rating: Int, comment: String?, listId: Long) {
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
             if (userId != null && userId != -1L) {
-                val newContent = MediaContent(
+                val date = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(Date())
+                val mediaContent = MediaContent(
                     userId = userId,
+                    listId = listId,
                     title = title,
                     type = type,
                     date = date,
                     rating = rating,
-                    comment = comment,
-                    isSpoiler = isSpoiler
+                    comment = comment
                 )
-                userDao.insertMediaContent(newContent)
-                _contentSaved.emit(true)
+                userDao.insertMediaContent(mediaContent)
+                _saveStatus.emit(true)
             } else {
-                _error.emit("Oturum hatası. Lütfen tekrar giriş yapın.")
+                _error.emit("Oturum açılamadı. Lütfen giriş yapın.")
             }
         }
     }

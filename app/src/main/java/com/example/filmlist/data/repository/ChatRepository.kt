@@ -20,6 +20,9 @@ class ChatRepository {
     )
 
     suspend fun sendMessage(message: String): String? {
+        if (BuildConfig.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY_HERE") {
+            return "Gemini API anahtarı eksik! Lütfen local.properties dosyasını kontrol edin."
+        }
         return try {
             val response = chat.sendMessage(message)
             response.text
