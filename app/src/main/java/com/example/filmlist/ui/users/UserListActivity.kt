@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 class UserListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUserListBinding
     private lateinit var viewModel: UserListViewModel
+    private lateinit var adapter: MediaContentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,16 +28,22 @@ class UserListActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         setupViewModel()
+        setupUI()
         setupObservers()
+    }
+
+    private fun setupUI() {
+        adapter = MediaContentAdapter { content ->
+            // Long click handling
+        }
+        binding.userRecyclerView.layoutManager = LinearLayoutManager(this)
+        binding.userRecyclerView.adapter = adapter
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        binding.userRecyclerView.layoutManager = LinearLayoutManager(this)
-        // Note: You would typically create a MediaContentAdapter here
     }
 
     private fun setupViewModel() {
@@ -46,8 +53,8 @@ class UserListActivity : AppCompatActivity() {
 
     private fun setupObservers() {
         lifecycleScope.launch {
-            viewModel.userMediaContent.collectLatest { content ->
-                // adapter.setItems(content)
+            viewModel.selectedListContent.collectLatest { content ->
+                adapter.setItems(content)
             }
         }
 

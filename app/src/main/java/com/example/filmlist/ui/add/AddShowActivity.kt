@@ -12,10 +12,7 @@ import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.filmlist.R
-import com.example.filmlist.data.local.AppDatabase
-import com.example.filmlist.data.local.SessionManager
-import com.example.filmlist.data.repository.AuthRepository
-import com.example.filmlist.ui.ViewModelFactory
+import com.example.filmlist.util.RepositoryProvider
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -65,9 +62,7 @@ class AddShowActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        val database = AppDatabase.getDatabase(this)
-        val sessionManager = SessionManager(this)
-        val factory = ViewModelFactory(AuthRepository(database.userDao(), sessionManager))
+        val factory = RepositoryProvider.provideViewModelFactory(this)
         viewModel = ViewModelProvider(this, factory)[AddContentViewModel::class.java]
     }
 

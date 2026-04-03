@@ -16,8 +16,8 @@ class AddContentViewModel(
     private val _userLists = MutableStateFlow<List<UserList>>(emptyList())
     val userLists = _userLists.asStateFlow()
 
-    private val _saveStatus = MutableSharedFlow<Boolean>()
-    val saveStatus = _saveStatus.asSharedFlow()
+    private val _contentSaved = MutableSharedFlow<Boolean>()
+    val contentSaved = _contentSaved.asSharedFlow()
 
     private val _error = MutableSharedFlow<String>()
     val error = _error.asSharedFlow()
@@ -37,6 +37,36 @@ class AddContentViewModel(
         }
     }
 
+    fun saveContent(title: String, type: String, date: String, rating: Int, comment: String?, isSpoiler: Boolean) {
+        viewModelScope.launch {
+            val userId = sessionManager.userId.first()
+            if (userId != null && userId != -1L) {
+                // Find or create a default list for the user if userLists is empty
+                var targetListId = _userLists.value.firstOrNull()?.id
+                
+                if (targetListId == null) {
+                    val defaultList = UserList(userId = userId, name = "İzlediklerim", orderIndex = 0)
+                    targetListId = userDao.insertUserList(defaultList)
+                }
+
+                val mediaContent = MediaContent(
+                    userId = userId,
+                    listId = targetListId,
+                    title = title,
+                    type = type,
+                    date = date,
+                    rating = rating,
+                    comment = comment
+                    // isSpoiler normally goes here if entity supports it
+                )
+                userDao.insertMediaContent(mediaContent)
+                _contentSaved.emit(true)
+            } else {
+                _error.emit("Oturum açılamadı. Lütfen giriş yapın.")
+            }
+        }
+    }
+
     fun saveMediaContent(title: String, type: String, rating: Int, comment: String?, listId: Long) {
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
@@ -52,7 +82,7 @@ class AddContentViewModel(
                     comment = comment
                 )
                 userDao.insertMediaContent(mediaContent)
-                _saveStatus.emit(true)
+                _contentSaved.emit(true)
             } else {
                 _error.emit("Oturum açılamadı. Lütfen giriş yapın.")
             }

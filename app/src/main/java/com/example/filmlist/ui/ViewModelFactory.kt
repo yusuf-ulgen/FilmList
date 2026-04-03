@@ -31,7 +31,7 @@ class ViewModelFactory(
                 SignUpViewModel(authRepository) as T
             }
             modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
-                HomeViewModel(movieRepository!!) as T
+                HomeViewModel(movieRepository!!, chatRepository!!, authRepository.userDao, authRepository.sessionManager) as T
             }
             modelClass.isAssignableFrom(ChatViewModel::class.java) -> {
                 ChatViewModel(chatRepository!!, authRepository) as T

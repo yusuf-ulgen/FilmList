@@ -37,22 +37,6 @@ class HomeScreen : AppCompatActivity() {
         adapter = MovieAdapter()
         binding.recyclerViewExplore.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerViewExplore.adapter = adapter
-
-        binding.aiButton.setOnClickListener {
-            startActivity(Intent(this, AiChatActivity::class.java))
-        }
-
-        binding.profileButton.setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
-        }
-
-        binding.listButton.setOnClickListener {
-            startActivity(Intent(this, UserListActivity::class.java))
-        }
-
-        binding.addButton.setOnClickListener {
-            startActivity(Intent(this, AddContentActivity::class.java))
-        }
     }
 
     private fun setupViewModel() {
@@ -61,12 +45,6 @@ class HomeScreen : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        lifecycleScope.launch {
-            viewModel.popularMovies.collectLatest { movies ->
-                adapter.setMovies(movies)
-            }
-        }
-
         lifecycleScope.launch {
             viewModel.isLoading.collectLatest { isLoading ->
                 binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

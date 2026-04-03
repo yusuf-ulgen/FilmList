@@ -17,7 +17,7 @@ class ProfileViewModel(
     private val _stats = MutableStateFlow<StatsRepository.UserStats?>(null)
     val stats = _stats.asStateFlow()
 
-    private val _username = sessionManager.username
+    private val _username = sessionManager.userEmail
     val username = _username
 
     init {

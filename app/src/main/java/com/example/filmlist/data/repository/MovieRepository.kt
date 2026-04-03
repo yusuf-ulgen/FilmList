@@ -9,15 +9,17 @@ class MovieRepository(private val movieDao: MovieDao) {
     private val api = RetrofitInstance.tmdbApi
     private val apiKey = BuildConfig.TMDB_API_KEY
 
-    suspend fun getPopularMovies(): Result<List<Movie>> {
+    suspend fun getPopularMovies(page: Int = 1): Result<List<Movie>> {
         if (apiKey == "YOUR_TMDB_API_KEY_HERE") {
             return Result.failure(Exception("API anahtarı eksik! Lütfen local.properties dosyasını kontrol edin."))
         }
         return try {
-            val response = api.getPopularMovies(apiKey)
+            val response = api.getPopularMovies(apiKey, page = page)
             if (response.results.isNotEmpty()) {
-                // Cache results
-                movieDao.clearMovies()
+                // Sadece ilk sayfada önbelleği temizleyelim
+                if (page == 1) {
+                    movieDao.clearMovies()
+                }
                 movieDao.insertMovies(response.results.map { it.toEntity() })
                 Result.success(response.results)
             } else {

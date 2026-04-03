@@ -52,10 +52,10 @@ class HomeFragment : Fragment() {
             }
         }
         
-        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = adapter
+        binding.recyclerViewExplore.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerViewExplore.adapter = adapter
 
-        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.recyclerViewExplore.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (!recyclerView.canScrollVertically(1)) {
                     viewModel.loadMore()

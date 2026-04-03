@@ -44,7 +44,7 @@ class ProfileFragment : Fragment() {
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.username.collectLatest { name ->
+            viewModel.username.collectLatest { name: String? ->
                 binding.usernameText.text = name ?: "Kullanıcı"
             }
         }

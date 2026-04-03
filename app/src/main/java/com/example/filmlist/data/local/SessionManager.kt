@@ -26,6 +26,10 @@ class SessionManager(private val context: Context) {
         preferences[USER_ID]
     }
 
+    val userEmail: Flow<String?> = context.dataStore.data.map { preferences ->
+        preferences[USER_EMAIL]
+    }
+
     suspend fun saveSession(userId: Long, email: String, rememberMe: Boolean) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = true

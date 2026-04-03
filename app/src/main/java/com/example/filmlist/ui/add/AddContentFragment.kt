@@ -65,7 +65,7 @@ class AddContentFragment : Fragment() {
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.saveStatus.collectLatest { success ->
+            viewModel.contentSaved.collectLatest { success ->
                 if (success) {
                     Toast.makeText(requireContext(), "Başarıyla listenize eklendi!", Toast.LENGTH_SHORT).show()
                     binding.titleEditText.text?.clear()
