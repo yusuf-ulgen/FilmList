@@ -11,15 +11,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.filmlist.R
 import com.example.filmlist.data.local.*
-import com.example.filmlist.databinding.BottomSheetItemActionBinding
 import com.example.filmlist.databinding.FragmentUserListBinding
 import com.example.filmlist.util.RepositoryProvider
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -27,7 +24,6 @@ class UserListFragment : Fragment() {
     private var _binding: FragmentUserListBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: UserListViewModel
-    private lateinit var contentAdapter: MediaContentAdapter
     private lateinit var listsAdapter: UserListsAdapter
 
     override fun onCreateView(
@@ -40,31 +36,31 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI()
         setupViewModel()
+        setupUI()
         setupObservers()
     }
 
     private fun setupUI() {
-        // Categories Adapter
-        listsAdapter = UserListsAdapter { list ->
-            viewModel.loadListContent(list.id)
-        }
-        binding.listsRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        listsAdapter = UserListsAdapter(
+            onListClick = { list ->
+                // Navigasyon: Liste ismine tıklandığında detay sayfasına git
+                val bundle = Bundle().apply {
+                    putLong("listId", list.id)
+                    putString("listName", list.name)
+                }
+                findNavController().navigate(R.id.action_navigation_list_to_listDetailFragment, bundle)
+            },
+            onListLongClick = { list ->
+                showListActions(list)
+            }
+        )
+        binding.listsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.listsRecyclerView.adapter = listsAdapter
-
-        // Content Adapter
-        contentAdapter = MediaContentAdapter { content ->
-            showItemActions(content)
-        }
-        binding.userRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.userRecyclerView.adapter = contentAdapter
 
         binding.addListFab.setOnClickListener {
             showCreateListDialog()
         }
-        
-        setupDragAndDrop()
     }
 
     private fun setupViewModel() {
@@ -76,23 +72,18 @@ class UserListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userLists.collectLatest { lists ->
                 listsAdapter.setLists(lists)
-                if (lists.isEmpty()) {
-                    binding.userRecyclerView.visibility = View.GONE
-                } else {
-                    binding.userRecyclerView.visibility = View.VISIBLE
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.selectedListContent.collectLatest { content ->
-                contentAdapter.setItems(content)
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isLoading.collectLatest { isLoading ->
                 binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.error.collectLatest { error ->
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -116,55 +107,48 @@ class UserListFragment : Fragment() {
             .show()
     }
 
-    private fun showItemActions(content: MediaContent) {
-        val dialog = BottomSheetDialog(requireContext())
-        val actionBinding = BottomSheetItemActionBinding.inflate(layoutInflater)
-        dialog.setContentView(actionBinding.root)
-
-        actionBinding.moveButton.setOnClickListener {
-            showMoveToListMenu(content)
-            dialog.dismiss()
-        }
-
-        actionBinding.deleteButton.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Emin misiniz?")
-                .setMessage("Bu içeriği listenizden tamamen silecek misiniz?")
-                .setPositiveButton("Evet, Sil") { _, _ ->
-                    viewModel.deleteItem(content)
-                    Toast.makeText(requireContext(), "Silindi.", Toast.LENGTH_SHORT).show()
-                }
-                .setNegativeButton("İptal", null)
-                .show()
-            dialog.dismiss()
-        }
-
-        dialog.show()
-    }
-
-    private fun showMoveToListMenu(content: MediaContent) {
-        val lists = viewModel.userLists.value
-        val names = lists.map { it.name }.toTypedArray()
-        
+    private fun showListActions(userList: UserList) {
+        val options = arrayOf("Düzenle", "Sil")
         AlertDialog.Builder(requireContext())
-            .setTitle("Hedef Liste Seçin")
-            .setItems(names) { _, which ->
-                val target = lists[which]
-                viewModel.moveItem(content, target.id)
-                Toast.makeText(requireContext(), "${target.name} listesine taşındı.", Toast.LENGTH_SHORT).show()
+            .setTitle(userList.name)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showEditListDialog(userList)
+                    1 -> showDeleteListConfirm(userList)
+                }
             }
             .show()
     }
 
-    private fun setupDragAndDrop() {
-        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.START or ItemTouchHelper.END, 0) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                // Drag Lists logic
-                return true
+    private fun showEditListDialog(userList: UserList) {
+        val editText = EditText(requireContext()).apply {
+            setText(userList.name)
+            inputType = InputType.TYPE_CLASS_TEXT
+        }
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Listeyi Düzenle")
+            .setView(editText)
+            .setPositiveButton("Kaydet") { _, _ ->
+                val newName = editText.text.toString()
+                if (newName.isNotBlank() && newName != userList.name) {
+                    viewModel.updateList(userList, newName)
+                }
             }
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
-        })
-        itemTouchHelper.attachToRecyclerView(binding.listsRecyclerView)
+            .setNegativeButton("İptal", null)
+            .show()
+    }
+
+    private fun showDeleteListConfirm(userList: UserList) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Listeyi Sil")
+            .setMessage("${userList.name} listesini ve içindeki tüm içerikleri silmek istediğinize emin misiniz?")
+            .setPositiveButton("Sil") { _, _ ->
+                viewModel.deleteList(userList)
+                Toast.makeText(requireContext(), "Liste silindi.", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("İptal", null)
+            .show()
     }
 
     override fun onDestroyView() {

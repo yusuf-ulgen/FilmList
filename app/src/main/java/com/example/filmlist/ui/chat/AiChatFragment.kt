@@ -47,10 +47,6 @@ class AiChatFragment : Fragment() {
                 binding.messageEditText.text.clear()
             }
         }
-
-        binding.recommendationButton.setOnClickListener {
-            viewModel.getRecommendations()
-        }
     }
 
     private fun setupViewModel() {
@@ -71,7 +67,6 @@ class AiChatFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isLoading.collectLatest { isLoading ->
                 binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-                binding.recommendationButton.isEnabled = !isLoading
                 binding.sendButton.isEnabled = !isLoading
             }
         }

@@ -1,12 +1,15 @@
 package com.example.filmlist.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.filmlist.AuthLandingActivity
 import com.example.filmlist.databinding.FragmentProfileBinding
 import com.example.filmlist.util.RepositoryProvider
 import kotlinx.coroutines.flow.collectLatest
@@ -31,9 +34,22 @@ class ProfileFragment : Fragment() {
         setupObservers()
 
         binding.logoutButton.setOnClickListener {
-            viewModel.logout()
-            // Auth check in AuthLandingActivity will handle redirection
-            activity?.finish()
+            AlertDialog.Builder(requireContext())
+                .setTitle("Çıkış Yap")
+                .setMessage("Hesabınızdan çıkış yapmak istediğinizden emin misiniz?")
+                .setPositiveButton("Evet, Çıkış Yap") { _, _ ->
+                    viewModel.logout()
+                    val intent = Intent(requireActivity(), AuthLandingActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                }
+                .setNegativeButton("İptal", null)
+                .show()
+        }
+
+        binding.editPreferencesButton.setOnClickListener {
+            val intent = Intent(requireContext(), com.example.filmlist.ui.categories.CategoriesActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -44,7 +60,7 @@ class ProfileFragment : Fragment() {
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.username.collectLatest { name: String? ->
+            viewModel.username.collectLatest { name ->
                 binding.usernameText.text = name ?: "Kullanıcı"
             }
         }

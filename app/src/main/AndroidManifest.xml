@@ -22,6 +22,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.FilmList"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
 
         <activity
@@ -46,6 +47,41 @@
 
         <activity
             android:name=".ui.auth.LoginActivity"
+            android:theme="@style/Theme.FilmList"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.categories.CategoriesActivity"
+            android:theme="@style/Theme.FilmList"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.profile.ProfilingActivity"
+            android:theme="@style/Theme.FilmList"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.home.HomeScreen"
+            android:theme="@style/Theme.FilmList"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.chat.AiChatActivity"
+            android:theme="@style/Theme.FilmList"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.profile.ProfileActivity"
+            android:theme="@style/Theme.FilmList"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.users.UserListActivity"
+            android:theme="@style/Theme.FilmList"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.add.AddContentActivity"
             android:theme="@style/Theme.FilmList"
             android:exported="false" />
 

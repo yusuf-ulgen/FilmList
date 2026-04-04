@@ -21,7 +21,7 @@ interface TmdbApiService {
         @Query("language") language: String = "en-US" // Trailers are mostly en-US
     ): VideoResponse
 
-    @GET("search/movie")
+    @GET("search/multi")
     suspend fun searchMovies(
         @Query("api_key") apiKey: String,
         @Query("query") query: String,

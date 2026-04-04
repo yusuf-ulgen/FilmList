@@ -20,20 +20,22 @@ class UserListViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    private val _error = MutableSharedFlow<String>()
+    val error = _error.asSharedFlow()
+
     init {
         loadUserLists()
     }
 
-    fun loadUserLists() {
+    private fun loadUserLists() {
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
             if (userId != null && userId != -1L) {
                 userDao.getUserLists(userId).collect { lists ->
-                    _userLists.value = lists
-                    // Load the first list by default if exists
-                    if (lists.isNotEmpty() && _selectedListContent.value.isEmpty()) {
-                        loadListContent(lists.first().id)
-                    }
+                    // Tüm İçerikler (Yorum Yapılanlar) listesini sanal olarak en başa ekleyelim
+                    val allContentList = UserList(id = -1L, userId = userId, name = "Yorum Yapılanlar", orderIndex = -1)
+                    val transformedLists = listOf(allContentList) + lists
+                    _userLists.value = transformedLists
                 }
             }
         }
@@ -41,8 +43,19 @@ class UserListViewModel(
 
     fun loadListContent(listId: Long) {
         viewModelScope.launch {
-            userDao.getUserMediaContentByList(listId).collect { content ->
-                _selectedListContent.value = content
+            val userId = sessionManager.userId.first()
+            if (userId != null) {
+                if (listId == -1L) {
+                    // Tüm içerikleri getir (Yorum yapılanlar listesi için)
+                    userDao.getUserMediaContent(userId).collect { content ->
+                        _selectedListContent.value = content
+                    }
+                } else {
+                    // Sadece seçili listeye ait içerikleri getir
+                    userDao.getUserMediaContentByList(listId).collect { content ->
+                        _selectedListContent.value = content
+                    }
+                }
             }
         }
     }
@@ -51,21 +64,36 @@ class UserListViewModel(
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
             if (userId != null) {
+                val count = userDao.countUserListByName(userId, name)
+                if (count > 0 || name == "Yorum Yapılanlar") {
+                    _error.emit("Bu isimde bir liste zaten var.")
+                    return@launch
+                }
+                
                 val newList = UserList(userId = userId, name = name, orderIndex = _userLists.value.size)
                 userDao.insertUserList(newList)
             }
         }
     }
 
+    fun updateList(userList: UserList, newName: String) {
+        if (userList.id == -1L) return // System list cannot be renamed
+        viewModelScope.launch {
+            val updatedList = userList.copy(name = newName)
+            userDao.updateUserList(updatedList)
+        }
+    }
+
     fun deleteList(userList: UserList) {
+        if (userList.id == -1L) return // System list cannot be deleted
         viewModelScope.launch {
             userDao.deleteUserList(userList)
         }
     }
 
     fun moveItem(content: MediaContent, targetListId: Long) {
+        if (targetListId == -1L) return // Cannot move item to virtual system list
         viewModelScope.launch {
-            // Room update for move logic
             val updatedContent = content.copy(listId = targetListId)
             userDao.insertMediaContent(updatedContent)
         }
@@ -73,9 +101,7 @@ class UserListViewModel(
 
     fun deleteItem(content: MediaContent) {
         viewModelScope.launch {
-            // Room delete for item (MediaContent) logic
-            // Assuming there's a deleteMediaContent in UserDao
-            // For now we mock it or use insert/replace if it was handled
+            userDao.deleteMediaContent(content)
         }
     }
 }

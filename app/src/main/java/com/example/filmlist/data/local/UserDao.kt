@@ -48,4 +48,10 @@ interface UserDao {
 
     @Query("SELECT * FROM media_content WHERE listId = :listId ORDER BY id DESC")
     fun getUserMediaContentByList(listId: Long): Flow<List<MediaContent>>
+
+    @Query("SELECT COUNT(*) FROM user_lists WHERE userId = :userId AND name = :name")
+    suspend fun countUserListByName(userId: Long, name: String): Int
+
+    @Query("SELECT COUNT(*) FROM media_content WHERE listId = :listId AND title = :title")
+    suspend fun countMediaInListByTitle(listId: Long, title: String): Int
 }

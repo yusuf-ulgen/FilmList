@@ -4,23 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_premium_gradient"
-    tools:context=".ui.home.HomeFragment">
+    android:background="@drawable/bg_premium_gradient">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewExplore"
+        android:id="@+id/detailRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="16dp"
         android:clipToPadding="false"
-        android:paddingHorizontal="8dp"
-        android:paddingTop="8dp" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <ProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:indeterminateTint="@color/secondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/emptyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bu liste henüz boş."
+        android:textColor="@color/gray_text"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

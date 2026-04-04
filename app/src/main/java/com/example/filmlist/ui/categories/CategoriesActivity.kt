@@ -42,7 +42,7 @@ class CategoriesActivity : AppCompatActivity() {
 
         binding.continueButton.setOnClickListener {
             if (viewModel.isSelectionValid()) {
-                val intent = Intent(this, HomeScreen::class.java)
+                val intent = Intent(this, com.example.filmlist.MainActivity::class.java)
                 startActivity(intent)
                 finish()
             } else {

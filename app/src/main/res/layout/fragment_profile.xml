@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_premium_gradient"
     tools:context=".ui.profile.ProfileFragment">
 
     <ScrollView
@@ -22,7 +23,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:src="@drawable/ic_profile"
-                app:tint="@color/premium_gold"
+                app:tint="@color/secondary"
                 android:background="@drawable/bg_circle_outline"
                 android:padding="24dp"
                 android:layout_marginTop="32dp" />
@@ -34,7 +35,7 @@
                 android:text="Kullanıcı Adı"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:layout_marginTop="16dp" />
 
             <LinearLayout
@@ -46,28 +47,29 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="16dp"
-                    app:cardBackgroundColor="#2C3E50"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white"
                     android:layout_marginBottom="12dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="16dp"
+                        android:padding="20dp"
                         android:gravity="center_vertical">
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Toplam İzlenen"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="14sp" />
                         <TextView
                             android:id="@+id/totalWatchedText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="@color/premium_gold"
+                            android:textColor="@color/secondary"
                             android:textSize="20sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -76,26 +78,27 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="16dp"
-                    app:cardBackgroundColor="#2C3E50"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white"
                     android:layout_marginBottom="12dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="20dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Favori Türün"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="14sp" />
                         <TextView
                             android:id="@+id/favoriteGenreText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Aksiyon"
-                            android:textColor="@color/premium_gold"
+                            android:textColor="@color/secondary"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginTop="4dp" />
@@ -105,26 +108,27 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="16dp"
-                    app:cardBackgroundColor="#2C3E50"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/white"
                     android:layout_marginBottom="12dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="20dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Dizi İzleme Alışkanlığı"
-                            android:textColor="@color/white"
+                            android:textColor="@color/black"
                             android:textSize="14sp" />
                         <TextView
                             android:id="@+id/showHabitText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Sitcom / Çerezlik"
-                            android:textColor="@color/premium_gold"
+                            android:textColor="@color/secondary"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginTop="4dp" />
@@ -134,12 +138,27 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/editPreferencesButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Favori Türleri Düzenle"
+                app:cornerRadius="16dp"
+                android:backgroundTint="@color/secondary"
+                android:textColor="@color/white"
+                android:layout_marginTop="16dp"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
+
+            <Button
                 android:id="@+id/logoutButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:text="Çıkış Yap"
-                android:backgroundTint="#E74C3C"
-                android:layout_marginTop="24dp" />
+                android:backgroundTint="@color/error"
+                app:cornerRadius="16dp"
+                android:layout_marginTop="12dp"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>

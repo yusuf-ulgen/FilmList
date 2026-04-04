@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_premium_gradient"
+    android:background="@drawable/bg_app_watermark"
     tools:context=".ui.auth.LoginActivity">
 
     <View
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@drawable/bg_premium_gradient"
-        android:alpha="0.8"
+        android:alpha="0.4"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

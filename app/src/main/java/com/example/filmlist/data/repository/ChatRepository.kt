@@ -3,8 +3,8 @@ package com.example.filmlist.data.repository
 import com.example.filmlist.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ChatRepository {
     private val generativeModel = GenerativeModel(
@@ -14,19 +14,20 @@ class ChatRepository {
 
     private val chat = generativeModel.startChat(
         history = listOf(
-            content(role = "user") { text("Sen bir film ve dizi uzmanısın. Kullanıcılara film önerileri yapmalı ve sorularını yanıtlamalısın.") },
+            content(role = "user") { text("Sen bir film ve dizi uzmanısın. Kullanıcılara film önerileri yapmalı ve sorularını yanıtlamalısın. Kısa ve net cevaplar ver.") },
             content(role = "model") { text("Anladım! Ben bir film ve dizi uzmanıyım. Harika öneriler yapmaya hazırım.") }
         )
     )
 
-    suspend fun sendMessage(message: String): String? {
-        if (BuildConfig.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY_HERE") {
-            return "Gemini API anahtarı eksik! Lütfen local.properties dosyasını kontrol edin."
+    suspend fun sendMessage(message: String): String? = withContext(Dispatchers.IO) {
+        if (BuildConfig.GEMINI_API_KEY == "YOUR_GEMINI_API_KEY_HERE" || BuildConfig.GEMINI_API_KEY.isBlank()) {
+            return@withContext "Gemini API anahtarı eksik! Lütfen local.properties dosyasını kontrol edin."
         }
-        return try {
+        return@withContext try {
             val response = chat.sendMessage(message)
             response.text
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }

@@ -2,8 +2,17 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.FilmList" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/secondary</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.FilmList" parent="Base.Theme.FilmList" />
+    
+    <style name="App.ItemActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">#33339AF0</item> <!-- Translucent secondary blue -->
+        <item name="android:width">48dp</item>
+        <item name="android:height">32dp</item>
+    </style>
 </resources>

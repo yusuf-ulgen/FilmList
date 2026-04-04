@@ -2,7 +2,9 @@ package com.example.filmlist.ui.chat
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.filmlist.R
 import com.example.filmlist.databinding.ItemChatMessageBinding
 
 class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
@@ -26,16 +28,19 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         val message = messages[position]
         holder.binding.messageText.text = message.text
         
-        // Simple layout logic for user vs model
         val params = holder.binding.messageCard.layoutParams as ViewGroup.MarginLayoutParams
+        val context = holder.itemView.context
+        
         if (message.isUser) {
-            params.marginStart = 100
+            params.marginStart = 64
             params.marginEnd = 0
-            holder.binding.messageCard.setCardBackgroundColor(0xFF03DAC6.toInt()) // Teal
+            holder.binding.messageCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.secondary))
+            holder.binding.messageText.setTextColor(ContextCompat.getColor(context, R.color.white))
         } else {
             params.marginStart = 0
-            params.marginEnd = 100
-            holder.binding.messageCard.setCardBackgroundColor(0x33FFFFFF.toInt()) // Translucent white
+            params.marginEnd = 64
+            holder.binding.messageCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.surface))
+            holder.binding.messageText.setTextColor(ContextCompat.getColor(context, R.color.black))
         }
         holder.binding.messageCard.layoutParams = params
     }

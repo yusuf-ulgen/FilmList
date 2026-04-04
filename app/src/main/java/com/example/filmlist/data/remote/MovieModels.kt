@@ -11,15 +11,24 @@ data class Movie(
     @SerializedName("id")
     val id: Int,
     @SerializedName("title")
-    val title: String,
+    val movieTitle: String?,
+    @SerializedName("name")
+    val tvName: String?,
     @SerializedName("overview")
     val overview: String,
     @SerializedName("poster_path")
     val posterPath: String?,
     @SerializedName("release_date")
     val releaseDate: String?,
+    @SerializedName("first_air_date")
+    val firstAirDate: String?,
     @SerializedName("vote_average")
-    val voteAverage: Double
+    val voteAverage: Double,
+    @SerializedName("media_type")
+    val mediaType: String?
 ) {
-    fun getFullPosterUrl() = "https://image.tmdb.org/t/p/w500$posterPath"
+    val title: String get() = movieTitle ?: tvName ?: "Bilinmeyen"
+    val date: String? get() = releaseDate ?: firstAirDate
+
+    fun getFullPosterUrl() = if (posterPath != null) "https://image.tmdb.org/t/p/w500$posterPath" else null
 }

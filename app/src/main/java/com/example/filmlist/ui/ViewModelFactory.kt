@@ -43,7 +43,7 @@ class ViewModelFactory(
                 ProfilingViewModel(authRepository.userDao, authRepository.sessionManager) as T
             }
             modelClass.isAssignableFrom(AddContentViewModel::class.java) -> {
-                AddContentViewModel(authRepository.userDao, authRepository.sessionManager) as T
+                AddContentViewModel(authRepository.userDao, authRepository.sessionManager, movieRepository!!) as T
             }
             modelClass.isAssignableFrom(UserListViewModel::class.java) -> {
                 UserListViewModel(authRepository.userDao, authRepository.sessionManager) as T

@@ -12,18 +12,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.filmlist.data.local.AppDatabase
-import com.example.filmlist.data.local.SessionManager
-import com.example.filmlist.data.repository.AuthRepository
+import com.example.filmlist.MainActivity
 import com.example.filmlist.databinding.ActivitySignUpBinding
-import com.example.filmlist.ui.ViewModelFactory
-import com.example.filmlist.ui.profile.ProfilingActivity
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var viewModel: SignUpViewModel
+    private var navigated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,9 +112,12 @@ class SignUpActivity : AppCompatActivity() {
     private fun setupObservers() {
         lifecycleScope.launch {
             viewModel.signUpResult.collectLatest { success ->
-                if (success) {
-                    Toast.makeText(this@SignUpActivity, "Kayıt Başarılı!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@SignUpActivity, ProfilingActivity::class.java))
+                if (success && !navigated) {
+                    navigated = true
+                    Toast.makeText(this@SignUpActivity, "Kayıt Başarılı! Hoş geldiniz.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@SignUpActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
                     finish()
                 }
             }

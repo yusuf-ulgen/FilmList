@@ -8,18 +8,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.filmlist.data.local.AppDatabase
-import com.example.filmlist.data.local.SessionManager
-import com.example.filmlist.data.repository.AuthRepository
+import com.example.filmlist.MainActivity
 import com.example.filmlist.databinding.ActivityLogInBinding
-import com.example.filmlist.ui.ViewModelFactory
-import com.example.filmlist.ui.home.HomeScreen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLogInBinding
     private lateinit var viewModel: LoginViewModel
+    private var navigated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +47,12 @@ class LoginActivity : AppCompatActivity() {
     private fun setupObservers() {
         lifecycleScope.launch {
             viewModel.loginResult.collectLatest { success ->
-                if (success) {
+                if (success && !navigated) {
+                    navigated = true
                     Toast.makeText(this@LoginActivity, "Giriş Başarılı!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@LoginActivity, HomeScreen::class.java))
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
                     finish()
                 }
             }

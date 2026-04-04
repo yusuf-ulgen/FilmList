@@ -59,6 +59,24 @@ class MovieRepository(private val movieDao: MovieDao) {
         }
     }
 
-    private fun Movie.toEntity() = MovieEntity(id, title, overview, posterPath, releaseDate, voteAverage)
-    private fun MovieEntity.toDomain() = Movie(id, title, overview, posterPath, releaseDate, voteAverage)
+    private fun Movie.toEntity() = MovieEntity(
+        id = id,
+        title = title,
+        overview = overview,
+        posterPath = posterPath,
+        releaseDate = date,
+        voteAverage = voteAverage
+    )
+
+    private fun MovieEntity.toDomain() = Movie(
+        id = id,
+        movieTitle = title,
+        tvName = null,
+        overview = overview,
+        posterPath = posterPath,
+        releaseDate = releaseDate,
+        firstAirDate = null,
+        voteAverage = voteAverage,
+        mediaType = "movie"
+    )
 }

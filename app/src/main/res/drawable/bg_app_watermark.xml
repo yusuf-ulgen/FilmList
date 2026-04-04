@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Base summer gradient -->
+    <item>
+        <shape>
+            <gradient
+                android:angle="45"
+                android:startColor="#E3F2FD" 
+                android:endColor="#FFFFFF"
+                android:type="linear" />
+        </shape>
+    </item>
+    <!-- Welcome background image with very low opacity -->
+    <item android:alpha="0.05">
+        <bitmap
+            android:src="@drawable/welcome_bg"
+            android:gravity="center"
+            android:scaleType="centerCrop" />
+    </item>
+</layer-list>

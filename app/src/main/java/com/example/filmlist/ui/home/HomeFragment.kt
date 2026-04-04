@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        
+
         binding.recyclerViewExplore.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewExplore.adapter = adapter
 
@@ -73,6 +73,8 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.feedItems.collectLatest { items ->
                 adapter.setItems(items)
+                // Filmleri göster, RecyclerView zaten match_parent
+                binding.recyclerViewExplore.visibility = View.VISIBLE
             }
         }
 

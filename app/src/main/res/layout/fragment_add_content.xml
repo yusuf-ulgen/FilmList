@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_premium_gradient"
     tools:context=".ui.add.AddContentFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:padding="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,64 +21,62 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hangi Listeye Eklensin?"
-                android:textColor="@color/white"
-                android:layout_marginBottom="8dp" />
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp" />
 
-            <Spinner
-                android:id="@+id/listSpinner"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:layout_marginBottom="16dp" />
+                android:layout_height="60dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="28dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="#EEF0F2">
+                <Spinner
+                    android:id="@+id/listSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingHorizontal="16dp" />
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="İçerik Adı"
+                android:hint="İçerik Ara ve Seç"
+                app:hintTextColor="@color/secondary"
+                android:textColorHint="@color/gray_text"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="16dp">
-                <com.google.android.material.textfield.TextInputEditText
+                app:boxStrokeColor="@color/secondary"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="@color/secondary"
+                android:layout_marginBottom="28dp">
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:id="@+id/titleEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white" />
+                    android:layout_height="65dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:completionThreshold="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="İçerik Türü"
-                android:textColor="@color/white"
-                android:layout_marginBottom="8dp" />
-
-            <RadioGroup
-                android:id="@+id/typeRadioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp">
-                <RadioButton
-                    android:id="@+id/radioFilm"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Film"
-                    android:textColor="@color/white"
-                    android:checked="true" />
-                <RadioButton
-                    android:id="@+id/radioShow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dizi"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="24dp" />
-            </RadioGroup>
+            <!-- İçerik Türü seçimi otomatik yapıldığı için kaldırıldı -->
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Puanın"
-                android:textColor="@color/white"
-                android:layout_marginBottom="4dp" />
+                android:text="Değerlendirmen"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
 
             <RatingBar
                 android:id="@+id/ratingBar"
@@ -85,29 +84,42 @@
                 android:layout_height="wrap_content"
                 android:numStars="5"
                 android:stepSize="1.0"
+                style="@style/Widget.AppCompat.RatingBar"
                 android:progressTint="@color/premium_gold"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="28dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Senin Yorumun (Opsiyonel)"
+                app:hintTextColor="@color/secondary"
+                android:textColorHint="@color/gray_text"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="16dp">
+                app:boxStrokeColor="@color/secondary"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                android:layout_marginBottom="28dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/commentEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="120dp"
                     android:gravity="top"
-                    android:textColor="@color/white" />
+                    android:padding="16dp"
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Listeme Ekle"
-                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_height="60dp"
+                android:text="LİSTEME EKLE"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/secondary"
+                app:cornerRadius="18dp"
                 android:layout_marginTop="8dp" />
 
         </LinearLayout>

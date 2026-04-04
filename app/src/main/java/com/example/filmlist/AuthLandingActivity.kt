@@ -2,6 +2,7 @@ package com.example.filmlist
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.filmlist.data.local.SessionManager
@@ -20,6 +21,9 @@ class AuthLandingActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
+        // Önce içeriği gizle, session kontrolü tamamlayınca göster
+        binding.root.visibility = View.INVISIBLE
+
         checkSessionAndNavigate()
 
         binding.loginButtonId.setOnClickListener {
@@ -35,8 +39,13 @@ class AuthLandingActivity : AppCompatActivity() {
         val sessionManager = SessionManager(this)
         lifecycleScope.launch {
             if (sessionManager.isLoggedIn.first()) {
-                startActivity(Intent(this@AuthLandingActivity, MainActivity::class.java))
+                val intent = Intent(this@AuthLandingActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
                 finish()
+            } else {
+                // Oturum yok, landing sayfasını göster
+                binding.root.visibility = View.VISIBLE
             }
         }
     }

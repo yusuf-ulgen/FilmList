@@ -6,8 +6,8 @@
         android:title="Ana Sayfa" />
     <item
         android:id="@+id/navigation_ai"
-        android:icon="@drawable/ic_ai"
-        android:title="AI Sohbet" />
+        android:icon="@drawable/ic_search"
+        android:title="Keşfet" />
     <item
         android:id="@+id/navigation_add"
         android:icon="@drawable/ic_add"
