@@ -13,6 +13,10 @@ import com.example.filmlist.databinding.FragmentAiChatBinding
 import com.example.filmlist.util.RepositoryProvider
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import android.view.ViewGroup.MarginLayoutParams
 
 class AiChatFragment : Fragment() {
     private var _binding: FragmentAiChatBinding? = null
@@ -39,6 +43,32 @@ class AiChatFragment : Fragment() {
         adapter = ChatAdapter()
         binding.chatRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.chatRecyclerView.adapter = adapter
+
+        // Handle Keyboard insets for the input area
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
+            val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            
+            binding.inputArea.updateLayoutParams<MarginLayoutParams> {
+                bottomMargin = if (imeInsets.bottom > 0) {
+                    // 1. imeInsets.bottom: Keyboard top from screen bottom
+                    // 2. systemBars.bottom: System navigation height
+                    // 3. 60dp: Our BottomNavigationView height
+                    // We subtract 2 and 3 because the fragment container already starts above them.
+                        
+                    val bottomNavHeightPx = (60 * resources.displayMetrics.density).toInt()
+                    val keyboardHeightAboveFragmentBottom = imeInsets.bottom - systemBars.bottom - bottomNavHeightPx
+                    
+                    // Final tiny gap for "bitişik" (adjacent) look
+                    val tinyGap = (0.5 * resources.displayMetrics.density).toInt()
+                    maxOf(tinyGap, keyboardHeightAboveFragmentBottom + tinyGap)
+                } else {
+                    // When keyboard is closed, standard margin from the nav bar
+                    (16 * resources.displayMetrics.density).toInt()
+                }
+            }
+            windowInsets
+        }
 
         binding.sendButton.setOnClickListener {
             val message = binding.messageEditText.text.toString()

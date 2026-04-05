@@ -16,6 +16,7 @@ class SessionManager(private val context: Context) {
         private val USER_ID = longPreferencesKey("user_id")
         private val USER_EMAIL = stringPreferencesKey("user_email")
         private val REMEMBER_ME = booleanPreferencesKey("remember_me")
+        private val PROFILE_IMAGE_URI = stringPreferencesKey("profile_image_uri")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -43,6 +44,16 @@ class SessionManager(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = false
             preferences[USER_ID] = -1L
+        }
+    }
+
+    val profileImageUri: Flow<String?> = context.dataStore.data.map { preferences ->
+        preferences[PROFILE_IMAGE_URI]
+    }
+
+    suspend fun saveProfileImage(uri: String) {
+        context.dataStore.edit { preferences ->
+            preferences[PROFILE_IMAGE_URI] = uri
         }
     }
 }

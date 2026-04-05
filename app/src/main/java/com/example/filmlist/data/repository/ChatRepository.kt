@@ -28,7 +28,7 @@ class ChatRepository {
             response.text
         } catch (e: Exception) {
             e.printStackTrace()
-            null
+            "Hata: ${e.message ?: "Bilinmeyen bir hata oluştu."}"
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.filmlist.ui.categories
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.filmlist.R
@@ -37,9 +38,13 @@ class CategoryAdapter(private var categoryList: MutableList<Category>) :
         holder.binding.categoryName.text = category.name
 
         if (category.isSelected) {
-            holder.binding.categoryName.setBackgroundColor(holder.itemView.context.getColor(R.color.green))
+            holder.binding.checkIcon.visibility = View.VISIBLE
+            holder.binding.categoryCard.setStrokeColor(holder.itemView.context.getColorStateList(R.color.secondary))
+            holder.binding.categoryCard.strokeWidth = 3
         } else {
-            holder.binding.categoryName.setBackgroundColor(holder.itemView.context.getColor(android.R.color.transparent))
+            holder.binding.checkIcon.visibility = View.GONE
+            holder.binding.categoryCard.setStrokeColor(holder.itemView.context.getColorStateList(R.color.gray_text))
+            holder.binding.categoryCard.strokeWidth = 1
         }
     }
 

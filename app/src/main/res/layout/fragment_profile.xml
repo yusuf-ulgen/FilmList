@@ -26,7 +26,11 @@
                 app:tint="@color/secondary"
                 android:background="@drawable/bg_circle_outline"
                 android:padding="24dp"
-                android:layout_marginTop="32dp" />
+                android:layout_marginTop="32dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Profil fotoğrafını değiştir"
+                android:foreground="?attr/selectableItemBackgroundBorderless" />
 
             <TextView
                 android:id="@+id/usernameText"

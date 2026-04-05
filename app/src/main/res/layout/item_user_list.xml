@@ -34,7 +34,7 @@
             android:layout_weight="1"
             android:layout_marginStart="16dp"
             android:text="Liste Adı"
-            android:textColor="@color/black"
+            android:textColor="@color/secondary"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -42,8 +42,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_search" 
-            app:tint="@color/gray_text" 
-             android:rotation="180" />
+            app:tint="@color/secondary" />
 
     </LinearLayout>
 

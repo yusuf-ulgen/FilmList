@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val userDao: UserDao,
-    private val sessionManager: SessionManager,
+    val sessionManager: SessionManager,
     private val statsRepository: StatsRepository
 ) : ViewModel() {
 
@@ -20,16 +20,36 @@ class ProfileViewModel(
     private val _username = sessionManager.userEmail
     val username = _username
 
+    val profileImageUri = sessionManager.profileImageUri
+
     init {
-        loadStats()
+        observeStats()
     }
 
-    fun loadStats() {
+    private fun observeStats() {
+        viewModelScope.launch {
+            sessionManager.userId.collectLatest { userId ->
+                if (userId != null && userId != -1L) {
+                    userDao.getUserMediaContent(userId).collectLatest {
+                        _stats.value = statsRepository.getUserStats(userId)
+                    }
+                }
+            }
+        }
+    }
+
+    fun refreshStats() {
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
             if (userId != null && userId != -1L) {
                 _stats.value = statsRepository.getUserStats(userId)
             }
+        }
+    }
+
+    fun saveProfileImage(uri: String) {
+        viewModelScope.launch {
+            sessionManager.saveProfileImage(uri)
         }
     }
 
