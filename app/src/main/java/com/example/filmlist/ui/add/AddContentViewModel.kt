@@ -58,7 +58,7 @@ class AddContentViewModel(
     }
 
     // Legacy method for AddFilmActivity compatibility
-    fun saveContent(title: String, type: String, date: String, rating: Int, comment: String?, isSpoiler: Boolean) {
+    fun saveContent(title: String, type: String, date: String, rating: Int, comment: String?, isSpoiler: Boolean, posterPath: String? = null) {
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
             if (userId != null && userId != -1L) {
@@ -76,7 +76,8 @@ class AddContentViewModel(
                     type = type,
                     date = date,
                     rating = rating,
-                    comment = comment
+                    comment = comment,
+                    posterPath = posterPath
                 )
                 userDao.insertMediaContent(mediaContent)
                 _contentSaved.emit(true)
@@ -84,7 +85,7 @@ class AddContentViewModel(
         }
     }
 
-    fun saveMediaContent(title: String, type: String, rating: Int, comment: String?, listId: Long) {
+    fun saveMediaContent(title: String, type: String, rating: Int, comment: String?, listId: Long, posterPath: String? = null) {
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
             if (userId != null && userId != -1L) {
@@ -102,7 +103,8 @@ class AddContentViewModel(
                     type = type,
                     date = date,
                     rating = rating,
-                    comment = comment
+                    comment = comment,
+                    posterPath = posterPath
                 )
                 userDao.insertMediaContent(mediaContent)
                 _contentSaved.emit(true)

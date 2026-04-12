@@ -3,6 +3,7 @@ package com.example.filmlist.ui.users
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.filmlist.R
 import com.example.filmlist.data.local.MediaContent
 import com.example.filmlist.databinding.ItemMovieBinding
@@ -40,10 +41,18 @@ class MediaContentAdapter(
             binding.movieTitle.text = item.title
             binding.movieReleaseDate.text = "${item.type} - ${item.date}"
             binding.movieRating.text = "Puan: ${item.rating}/5"
-            // Since it's a custom user entry, we can use a placeholder for image
-            binding.moviePoster.setImageResource(if (item.type == "FILM") R.drawable.ic_home else R.drawable.ic_list)
             
-            // Note: If you want to show the comment, you'd need to update the item_movie.xml layout
+            val posterUrl = if (!item.posterPath.isNullOrEmpty()) {
+                "https://image.tmdb.org/t/p/w500${item.posterPath}"
+            } else {
+                null
+            }
+
+            binding.moviePoster.load(posterUrl) {
+                crossfade(true)
+                placeholder(if (item.type == "FILM") R.drawable.ic_home else R.drawable.ic_list)
+                error(if (item.type == "FILM") R.drawable.ic_home else R.drawable.ic_list)
+            }
         }
     }
 }

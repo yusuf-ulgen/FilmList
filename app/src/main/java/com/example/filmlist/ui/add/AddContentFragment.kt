@@ -25,6 +25,7 @@ class AddContentFragment : Fragment() {
     private var searchAdapter: ArrayAdapter<String>? = null
     private var searchResultsList: List<com.example.filmlist.data.remote.Movie> = emptyList()
     private var selectedType: String = "FILM"
+    private var selectedPosterPath: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,7 +67,7 @@ class AddContentFragment : Fragment() {
                 lists.firstOrNull()?.id ?: -1L
             }
 
-            viewModel.saveMediaContent(title, selectedType, rating, comment.ifBlank { null }, selectedListId)
+            viewModel.saveMediaContent(title, selectedType, rating, comment.ifBlank { null }, selectedListId, selectedPosterPath)
         }
 
         binding.titleEditText.addTextChangedListener(object : TextWatcher {
@@ -75,6 +76,8 @@ class AddContentFragment : Fragment() {
                 val query = s.toString().trim()
                 if (query.length >= 2) {
                     viewModel.searchMovies(query)
+                } else if (query.isEmpty()) {
+                    selectedPosterPath = null
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
@@ -86,6 +89,7 @@ class AddContentFragment : Fragment() {
             
             selectedMovie?.let {
                 selectedType = if (it.mediaType == "tv" || it.tvName != null) "SHOW" else "FILM"
+                selectedPosterPath = it.posterPath
                 Toast.makeText(requireContext(), "İçerik türü otomatik belirlendi: $selectedType", Toast.LENGTH_SHORT).show()
             }
         }
@@ -124,6 +128,7 @@ class AddContentFragment : Fragment() {
                     binding.commentEditText.text?.clear()
                     binding.ratingBar.rating = 0f
                     selectedType = "FILM" // Reset to default
+                    selectedPosterPath = null // Reset
                 }
             }
         }

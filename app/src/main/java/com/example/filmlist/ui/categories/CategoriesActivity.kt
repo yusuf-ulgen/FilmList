@@ -29,7 +29,8 @@ class CategoriesActivity : AppCompatActivity() {
         enableEdgeToEdge()
         supportActionBar?.hide()
 
-        viewModel = ViewModelProvider(this)[CategoriesViewModel::class.java]
+        val factory = com.example.filmlist.util.RepositoryProvider.provideViewModelFactory(this)
+        viewModel = ViewModelProvider(this, factory)[CategoriesViewModel::class.java]
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -42,6 +43,7 @@ class CategoriesActivity : AppCompatActivity() {
 
         binding.continueButton.setOnClickListener {
             if (viewModel.isSelectionValid()) {
+                viewModel.saveSelections()
                 val intent = Intent(this, com.example.filmlist.MainActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -64,13 +66,13 @@ class CategoriesActivity : AppCompatActivity() {
 
     private fun setupObservers() {
         lifecycleScope.launch {
-            viewModel.filmCategories.collectLatest { categories ->
+            viewModel.filmCategories.collectLatest { categories: List<Category> ->
                 filmCategoryAdapter.updateCategories(categories)
             }
         }
 
         lifecycleScope.launch {
-            viewModel.diziCategories.collectLatest { categories ->
+            viewModel.diziCategories.collectLatest { categories: List<Category> ->
                 diziCategoryAdapter.updateCategories(categories)
             }
         }

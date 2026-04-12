@@ -34,10 +34,10 @@ class ChatViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             val response = chatRepository.sendMessage(text)
-            if (response != null) {
+            if (!response.isNullOrBlank()) {
                 addMessage(response, false)
             } else {
-                _error.emit("Yapay zeka yanıt veremedi. Lütfen tekrar deneyin.")
+                _error.emit("Yapay zeka yanıt veremedi veya boş bir cevap döndürdü.")
             }
             _isLoading.value = false
         }

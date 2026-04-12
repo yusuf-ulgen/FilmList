@@ -50,7 +50,8 @@ class MovieRepository(private val movieDao: MovieDao) {
         return try {
             val response = api.searchMovies(apiKey, query)
             if (response.results.isNotEmpty()) {
-                Result.success(response.results)
+                val uniqueResults = response.results.distinctBy { it.id }
+                Result.success(uniqueResults)
             } else {
                 Result.failure(Exception("Sonuç bulunamadı."))
             }

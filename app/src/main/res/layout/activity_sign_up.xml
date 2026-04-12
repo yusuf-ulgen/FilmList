@@ -5,16 +5,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_app_watermark"
+    android:background="@drawable/bg_premium_gradient"
     tools:context=".ui.auth.SignUpActivity">
 
     <TextView
         android:id="@+id/titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="60dp"
         android:text="Yeni Hesap"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,9 +27,9 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
         android:layout_marginTop="32dp"
-        app:cardBackgroundColor="#1AFFFFFF"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="24dp"
-        app:cardElevation="0dp"
+        app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleText">
@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -64,7 +64,7 @@
                 android:textColorHint="@color/gray_text"
                 app:hintTextColor="@color/secondary"
                 app:passwordToggleEnabled="true"
-                app:passwordToggleTint="@color/white"
+                app:passwordToggleTint="@color/gray_text"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -88,8 +88,8 @@
                     android:id="@+id/dogumyili_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:textColor="@color/white" />
+                    android:inputType="text"
+                    android:textColor="@color/black" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -105,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="4dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/secondary"
                 android:padding="8dp" />
 
             <Button
@@ -117,6 +117,7 @@
                 android:textAllCaps="false"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:textColor="@color/white"
                 android:backgroundTint="@color/secondary"
                 app:cornerRadius="16dp" />
 

@@ -1,10 +1,14 @@
 package com.example.filmlist.ui.categories
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.filmlist.data.local.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
-class CategoriesViewModel : ViewModel() {
+class CategoriesViewModel(private val sessionManager: SessionManager) : ViewModel() {
 
     private val _filmCategories = MutableStateFlow<List<Category>>(emptyList())
     val filmCategories = _filmCategories.asStateFlow()
@@ -17,21 +21,30 @@ class CategoriesViewModel : ViewModel() {
     }
 
     private fun loadCategories() {
-        _filmCategories.value = listOf(
-            Category("Aksiyon"), Category("Komedi"), Category("Dram"),
-            Category("Macera"), Category("Bilim Kurgu"), Category("Gerilim"),
-            Category("Romantik"), Category("Korku"), Category("Animasyon"),
-            Category("Belgesel"), Category("Fantezi"), Category("Savaş"),
-            Category("Müzikal"), Category("Biyografi"), Category("Suç")
-        )
+        viewModelScope.launch {
+            val savedFilmCats = sessionManager.selectedFilmCategories.first()
+            val savedDiziCats = sessionManager.selectedDiziCategories.first()
 
-        _diziCategories.value = listOf(
-            Category("Drama"), Category("Komedi"), Category("Aksiyon"),
-            Category("Romantik"), Category("Suç"), Category("Bilim Kurgu"),
-            Category("Gerilim"), Category("Macera"), Category("Korku"),
-            Category("Fantastik"), Category("Yerli"), Category("Müzikal"),
-            Category("Belgesel"), Category("Hikaye"), Category("Kısa Dizi")
-        )
+            _filmCategories.value = listOf(
+                "Aksiyon", "Komedi", "Dram", "Macera", "Bilim Kurgu", 
+                "Gerilim", "Romantik", "Korku", "Animasyon", "Belgesel", 
+                "Fantezi", "Savaş", "Müzikal", "Biyografi", "Suç"
+            ).map { Category(it, savedFilmCats.contains(it)) }
+
+            _diziCategories.value = listOf(
+                "Drama", "Komedi", "Aksiyon", "Romantik", "Suç", 
+                "Bilim Kurgu", "Gerilim", "Macera", "Korku", "Fantastik", 
+                "Yerli", "Müzikal", "Belgesel", "Hikaye", "Kısa Dizi"
+            ).map { Category(it, savedDiziCats.contains(it)) }
+        }
+    }
+
+    fun saveSelections() {
+        viewModelScope.launch {
+            val selectedFilm = _filmCategories.value.filter { it.isSelected }.map { it.name }.toSet()
+            val selectedDizi = _diziCategories.value.filter { it.isSelected }.map { it.name }.toSet()
+            sessionManager.saveCategories(selectedFilm, selectedDizi)
+        }
     }
 
     fun isSelectionValid(): Boolean {

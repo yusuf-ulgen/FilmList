@@ -86,6 +86,10 @@ class HomeViewModel(
 
     private suspend fun loadPopularMovies() {
         _isLoading.value = true
+        // Randomize the first page to get different movies each time
+        if (currentPage == 1) {
+            currentPage = (1..20).random()
+        }
         repository.getPopularMovies(currentPage)
             .onSuccess { movies ->
                 val newItems = movies.map { FeedItem.MovieDiscovery(it, false) }

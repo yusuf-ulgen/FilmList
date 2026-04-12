@@ -37,7 +37,7 @@ class ViewModelFactory(
                 ChatViewModel(chatRepository!!, authRepository) as T
             }
             modelClass.isAssignableFrom(CategoriesViewModel::class.java) -> {
-                CategoriesViewModel() as T
+                CategoriesViewModel(authRepository.sessionManager) as T
             }
             modelClass.isAssignableFrom(ProfilingViewModel::class.java) -> {
                 ProfilingViewModel(authRepository.userDao, authRepository.sessionManager) as T
