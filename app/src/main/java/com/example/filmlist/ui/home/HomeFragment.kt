@@ -17,7 +17,7 @@ import com.example.filmlist.util.RepositoryProvider
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class HomeFragment : Fragment() {
+class   HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeViewModel
@@ -39,18 +39,32 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupUI() {
-        adapter = HomeAdapter { movieId ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                val repository = RepositoryProvider.provideMovieRepository(requireContext())
-                val videoKey = repository.getMovieVideoKey(movieId)
-                if (videoKey != null) {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$videoKey"))
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(requireContext(), "Fragman bulunamadı.", Toast.LENGTH_SHORT).show()
+        adapter = HomeAdapter(
+            onVideoClick = { movieId ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    val repository = RepositoryProvider.provideMovieRepository(requireContext())
+                    val videoKey = repository.getMovieVideoKey(movieId)
+                    if (videoKey != null) {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=$videoKey"))
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(requireContext(), "Fragman bulunamadı.", Toast.LENGTH_SHORT).show()
+                    }
                 }
+            },
+            onItemClick = { movie ->
+                val intent = Intent(requireContext(), com.example.filmlist.ui.detail.MovieDetailActivity::class.java).apply {
+                    putExtra("MOVIE_ID", movie.id)
+                    putExtra("MOVIE_TITLE", movie.title)
+                    putExtra("MOVIE_OVERVIEW", movie.overview)
+                    putExtra("MOVIE_RATING", movie.voteAverage)
+                    putExtra("MOVIE_DATE", movie.releaseDate)
+                    putExtra("MOVIE_POSTER", movie.posterPath)
+                    putExtra("MEDIA_TYPE", movie.mediaType)
+                }
+                startActivity(intent)
             }
-        }
+        )
 
         binding.recyclerViewExplore.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewExplore.adapter = adapter
@@ -62,6 +76,10 @@ class HomeFragment : Fragment() {
                 }
             }
         })
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshMovies()
+        }
     }
 
     private fun setupViewModel() {
@@ -80,7 +98,10 @@ class HomeFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isLoading.collectLatest { isLoading ->
-                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+                binding.progressBar.visibility = if (isLoading && !binding.swipeRefreshLayout.isRefreshing) View.VISIBLE else View.GONE
+                if (!isLoading) {
+                    binding.swipeRefreshLayout.isRefreshing = false
+                }
             }
         }
     }

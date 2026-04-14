@@ -49,8 +49,9 @@ class AddContentViewModel(
             return
         }
         viewModelScope.launch {
-            movieRepository.searchMovies(query).onSuccess {
-                _searchResults.value = it
+            movieRepository.searchMovies(query).onSuccess { results ->
+                val uniqueResults = results.distinctBy { it.title.lowercase() }
+                _searchResults.value = uniqueResults
             }.onFailure {
                 _searchResults.value = emptyList()
             }

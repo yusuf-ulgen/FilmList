@@ -30,11 +30,18 @@ class HomeViewModel(
     private val _error = MutableSharedFlow<String>()
     val error = _error.asSharedFlow()
 
-    private var currentPage = 1
+    private var currentPage = (1..20).random()
     private var isAiPhaseFinished = false
     private val aiLimit = 25
 
     init {
+        loadInitialFeed()
+    }
+
+    fun refreshMovies() {
+        currentPage = (1..20).random()
+        isAiPhaseFinished = false
+        _feedItems.value = emptyList()
         loadInitialFeed()
     }
 
@@ -45,10 +52,13 @@ class HomeViewModel(
             if (userId != null && userId != -1L) {
                 val userHistory = userDao.getUserMediaContentSync(userId).map { it.title }
                 if (userHistory.isNotEmpty()) {
-                    // Try AI Phase first
                     val aiSuggestions = fetchAiSuggestions(userHistory)
                     if (aiSuggestions.isNotEmpty()) {
                         _feedItems.value = aiSuggestions.take(aiLimit).map { FeedItem.MovieDiscovery(it, true) }
+                        // If we got fewer than 5 AI results, might as well finish AI phase
+                        if (aiSuggestions.size < 5) {
+                            isAiPhaseFinished = true
+                        }
                     } else {
                         isAiPhaseFinished = true
                         loadPopularMovies()
@@ -56,6 +66,11 @@ class HomeViewModel(
                 } else {
                     isAiPhaseFinished = true
                     loadPopularMovies()
+                }
+                // Once initial feed is done (either AI or Popular), next loads should be Popular
+                if (_feedItems.value.isNotEmpty() && _feedItems.value.size < aiLimit) {
+                    // Optional: we can fill up to 25 with popular right away if needed,
+                    // but usually loadMore is fine.
                 }
             } else {
                 isAiPhaseFinished = true
@@ -66,30 +81,39 @@ class HomeViewModel(
     }
 
     private suspend fun fetchAiSuggestions(history: List<String>): List<Movie> {
-        // AI suggestions logic - this would ideally return a list of Movie objects
-        // For now, we mock the transition after the first batch
-        return emptyList() // TODO: Implement AI title-to-movie matching
+        val aiResponse = chatRepository.getRecommendations(history) ?: return emptyList()
+        val suggestedTitles = aiResponse.lines()
+            .filter { line -> line.any { it.isDigit() } || line.contains("-") || line.contains(".") }
+            .map { line -> 
+                line.replace(Regex("^[0-9.\\-\\s]+"), "").trim() 
+            }
+            .filter { it.isNotBlank() && it.length > 2 }
+            .distinct()
+            .take(20)
+
+        val suggestedMovies = mutableListOf<Movie>()
+        for (title in suggestedTitles) {
+            val result = repository.searchMovies(title)
+            result.onSuccess { movies ->
+                movies.firstOrNull()?.let { suggestedMovies.add(it) }
+            }
+        }
+        return suggestedMovies
     }
 
     fun loadMore() {
         if (_isLoading.value) return
         viewModelScope.launch {
-            if (_feedItems.value.size >= aiLimit) {
+            // If we have items but isn't marked as finished, mark it now to allow popular loading
+            if (!isAiPhaseFinished) {
                 isAiPhaseFinished = true
             }
-
-            if (isAiPhaseFinished) {
-                loadPopularMovies()
-            }
+            loadPopularMovies()
         }
     }
 
     private suspend fun loadPopularMovies() {
         _isLoading.value = true
-        // Randomize the first page to get different movies each time
-        if (currentPage == 1) {
-            currentPage = (1..20).random()
-        }
         repository.getPopularMovies(currentPage)
             .onSuccess { movies ->
                 val newItems = movies.map { FeedItem.MovieDiscovery(it, false) }

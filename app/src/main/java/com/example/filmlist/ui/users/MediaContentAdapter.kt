@@ -48,10 +48,33 @@ class MediaContentAdapter(
                 null
             }
 
-            binding.moviePoster.load(posterUrl) {
-                crossfade(true)
-                placeholder(if (item.type == "FILM") R.drawable.ic_home else R.drawable.ic_list)
-                error(if (item.type == "FILM") R.drawable.ic_home else R.drawable.ic_list)
+            if (posterUrl != null) {
+                binding.posterPlaceholderText.visibility = android.view.View.GONE
+                binding.moviePoster.visibility = android.view.View.VISIBLE
+                binding.moviePoster.load(posterUrl) {
+                    crossfade(true)
+                    error(R.drawable.ic_launcher_background) // Fallback error
+                    listener(
+                        onSuccess = { _, _ ->
+                            binding.posterPlaceholderText.visibility = android.view.View.GONE
+                        },
+                        onError = { _, _ ->
+                            binding.moviePoster.visibility = android.view.View.GONE
+                            binding.posterPlaceholderText.visibility = android.view.View.VISIBLE
+                            binding.posterPlaceholderText.text = item.title
+                        }
+                    )
+                }
+            } else {
+                binding.moviePoster.visibility = android.view.View.GONE
+                binding.posterPlaceholderText.visibility = android.view.View.VISIBLE
+                binding.posterPlaceholderText.text = item.title
+                // Use a different color based on type for visual variety
+                val bgColor = if (item.type == "FILM") 
+                    android.graphics.Color.parseColor("#E91E63") // Pinkish
+                else 
+                    android.graphics.Color.parseColor("#2196F3") // Blueish
+                binding.posterPlaceholderText.setBackgroundColor(bgColor)
             }
         }
     }

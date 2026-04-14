@@ -18,8 +18,57 @@ interface TmdbApiService {
     suspend fun getMovieVideos(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
-        @Query("language") language: String = "en-US" // Trailers are mostly en-US
+        @Query("language") language: String = "en-US"
     ): VideoResponse
+
+    @GET("tv/{tv_id}/videos")
+    suspend fun getTvVideos(
+        @Path("tv_id") tvId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "en-US"
+    ): VideoResponse
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "tr-TR"
+    ): MovieDetails
+
+    @GET("tv/{tv_id}")
+    suspend fun getTvDetails(
+        @Path("tv_id") tvId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "tr-TR"
+    ): MovieDetails
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "tr-TR"
+    ): CreditsResponse
+
+    @GET("tv/{tv_id}/credits")
+    suspend fun getTvCredits(
+        @Path("tv_id") tvId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "tr-TR"
+    ): CreditsResponse
+
+    @GET("movie/{movie_id}/similar")
+    suspend fun getSimilarMovies(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "tr-TR"
+    ): MovieResponse
+
+    @GET("tv/{tv_id}/similar")
+    suspend fun getSimilarTvShows(
+        @Path("tv_id") tvId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "tr-TR"
+    ): MovieResponse
 
     @GET("search/multi")
     suspend fun searchMovies(

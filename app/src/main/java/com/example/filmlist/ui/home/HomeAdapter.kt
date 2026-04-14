@@ -10,7 +10,8 @@ import com.example.filmlist.data.remote.Movie
 import com.example.filmlist.databinding.ItemFeedPostBinding
 
 class HomeAdapter(
-    private val onVideoClick: (Int) -> Unit
+    private val onVideoClick: (Int) -> Unit,
+    private val onItemClick: (Movie) -> Unit
 ) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
     private var items: List<FeedItem> = emptyList()
@@ -22,7 +23,7 @@ class HomeAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemFeedPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding, onVideoClick)
+        return ViewHolder(binding, onVideoClick, onItemClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -36,10 +37,14 @@ class HomeAdapter(
 
     class ViewHolder(
         private val binding: ItemFeedPostBinding,
-        private val onVideoClick: (Int) -> Unit
+        private val onVideoClick: (Int) -> Unit,
+        private val onItemClick: (Movie) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movie: Movie, isAiSuggested: Boolean) {
+            binding.root.setOnClickListener {
+                onItemClick(movie)
+            }
             binding.postTitle.text = movie.title
             binding.postDescription.text = movie.overview
             binding.postPoster.load(movie.getFullPosterUrl()) {

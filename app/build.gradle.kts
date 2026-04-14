@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.preference.ktx)
+    implementation(libs.androidx.swiperefreshlayout)
 
     // Room
     implementation(libs.androidx.room.runtime)

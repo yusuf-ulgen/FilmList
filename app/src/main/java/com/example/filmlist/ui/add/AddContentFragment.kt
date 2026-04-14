@@ -49,7 +49,8 @@ class AddContentFragment : Fragment() {
             val comment = binding.commentEditText.text.toString().trim()
 
             val lists = viewModel.userLists.value
-            val selectedPosition = binding.listSpinner.selectedItemPosition
+            val selectedText = binding.listSpinnerAutoComplete.text.toString()
+            val selectedList = lists.find { it.name == selectedText } ?: lists.firstOrNull()
 
             if (lists.isEmpty()) {
                 Toast.makeText(requireContext(), "Lütfen önce bir liste oluşturun.", Toast.LENGTH_LONG).show()
@@ -61,13 +62,12 @@ class AddContentFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            val selectedListId = if (selectedPosition >= 0 && selectedPosition < lists.size) {
-                lists[selectedPosition].id
-            } else {
-                lists.firstOrNull()?.id ?: -1L
+            if (selectedList == null) {
+                Toast.makeText(requireContext(), "Lütfen bir liste seçin.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
 
-            viewModel.saveMediaContent(title, selectedType, rating, comment.ifBlank { null }, selectedListId, selectedPosterPath)
+            viewModel.saveMediaContent(title, selectedType, rating, comment.ifBlank { null }, selectedList.id, selectedPosterPath)
         }
 
         binding.titleEditText.addTextChangedListener(object : TextWatcher {
@@ -85,12 +85,14 @@ class AddContentFragment : Fragment() {
 
         (binding.titleEditText as? AutoCompleteTextView)?.setOnItemClickListener { parent: AdapterView<*>, _: View, position: Int, _: Long ->
             val selectedTitle = parent.getItemAtPosition(position) as String
-            val selectedMovie = searchResultsList.find { it.title == selectedTitle }
+            val selectedMovie = searchResultsList.find { it.title.equals(selectedTitle, ignoreCase = true) }
             
             selectedMovie?.let {
                 selectedType = if (it.mediaType == "tv" || it.tvName != null) "SHOW" else "FILM"
                 selectedPosterPath = it.posterPath
-                Toast.makeText(requireContext(), "İçerik türü otomatik belirlendi: $selectedType", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "$selectedTitle seçildi ($selectedType)", Toast.LENGTH_SHORT).show()
+                
+                // Opzisyonel: Afişi seçince bir önizleme gösterilebilir ama şu anlık kaydetmek yeterli.
             }
         }
     }
@@ -104,9 +106,34 @@ class AddContentFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userLists.collectLatest { lists ->
                 val listNames = lists.map { it.name }
-                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, listNames)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                binding.listSpinner.adapter = adapter
+                
+                // Filtreleme yapmayan özel bir adapter oluşturuyoruz
+                val adapter = object : ArrayAdapter<String>(requireContext(), com.example.filmlist.R.layout.item_dropdown_list, listNames) {
+                    override fun getFilter(): android.widget.Filter {
+                        return object : android.widget.Filter() {
+                            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                                val results = FilterResults()
+                                results.values = listNames
+                                results.count = listNames.size
+                                return results
+                            }
+                            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                                notifyDataSetChanged()
+                            }
+                        }
+                    }
+                }
+                
+                binding.listSpinnerAutoComplete.setAdapter(adapter)
+                
+                if (listNames.isNotEmpty() && binding.listSpinnerAutoComplete.text.isNullOrBlank()) {
+                    binding.listSpinnerAutoComplete.setText(listNames.first(), false)
+                }
+
+                // Tıklayınca her zaman dropdown'ı göster
+                binding.listSpinnerAutoComplete.setOnClickListener {
+                    binding.listSpinnerAutoComplete.showDropDown()
+                }
             }
         }
 

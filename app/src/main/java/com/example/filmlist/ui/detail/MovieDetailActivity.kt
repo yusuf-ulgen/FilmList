@@ -1,19 +1,24 @@
 package com.example.filmlist.ui.detail
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
+import com.example.filmlist.data.remote.Movie
 import com.example.filmlist.databinding.ActivityMovieDetailBinding
 import com.example.filmlist.util.RepositoryProvider
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class MovieDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMovieDetailBinding
+    private val castAdapter = CastAdapter()
+    private lateinit var similarAdapter: SimilarMoviesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +26,9 @@ class MovieDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val movieId = intent.getIntExtra("MOVIE_ID", -1)
+        val mediaType = intent.getStringExtra("MEDIA_TYPE") ?: "movie"
+        val isTv = mediaType == "tv" || mediaType == "show"
+        
         val title = intent.getStringExtra("MOVIE_TITLE") ?: ""
         val overview = intent.getStringExtra("MOVIE_OVERVIEW") ?: ""
         val rating = intent.getDoubleExtra("MOVIE_RATING", 0.0)
@@ -28,7 +36,9 @@ class MovieDetailActivity : AppCompatActivity() {
         val posterPath = intent.getStringExtra("MOVIE_POSTER") ?: ""
 
         setupUI(title, overview, rating, date, posterPath)
-        setupTrailer(movieId)
+        setupAdapters()
+        fetchDetails(movieId, isTv)
+        setupTrailer(movieId, isTv)
 
         binding.toolbar.setNavigationOnClickListener { finish() }
     }
@@ -36,7 +46,7 @@ class MovieDetailActivity : AppCompatActivity() {
     private fun setupUI(title: String, overview: String, rating: Double, date: String, poster: String) {
         binding.movieTitle.text = title
         binding.movieOverview.text = overview
-        binding.movieRating.text = "⭐ $rating"
+        binding.movieRating.text = String.format("⭐ %.1f", rating)
         binding.movieDate.text = date
 
         binding.movieBackdrop.load("https://image.tmdb.org/t/p/w780$poster") {
@@ -44,37 +54,72 @@ class MovieDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupTrailer(movieId: Int) {
+    private fun setupAdapters() {
+        binding.recyclerViewCast.adapter = castAdapter
+        
+        similarAdapter = SimilarMoviesAdapter { movie ->
+            val intent = Intent(this, MovieDetailActivity::class.java).apply {
+                putExtra("MOVIE_ID", movie.id)
+                putExtra("MOVIE_TITLE", movie.title)
+                putExtra("MOVIE_OVERVIEW", movie.overview)
+                putExtra("MOVIE_RATING", movie.voteAverage)
+                putExtra("MOVIE_DATE", movie.date)
+                putExtra("MOVIE_POSTER", movie.posterPath)
+                putExtra("MEDIA_TYPE", movie.mediaType)
+            }
+            startActivity(intent)
+        }
+        binding.recyclerViewSimilar.adapter = similarAdapter
+    }
+
+    private fun fetchDetails(movieId: Int, isTv: Boolean) {
+        val repository = RepositoryProvider.provideMovieRepository(this)
+        
+        lifecycleScope.launch {
+            // Paralel veri çekme
+            val detailsDeferred = async { repository.getMovieDetails(movieId, isTv) }
+            val creditsDeferred = async { repository.getMovieCredits(movieId, isTv) }
+            val similarDeferred = async { repository.getSimilarContent(movieId, isTv) }
+
+            val details = detailsDeferred.await()
+            val credits = creditsDeferred.await()
+            val similar = similarDeferred.await()
+
+            // UI Güncelleme - Detaylar
+            details?.let {
+                val runtime = if (isTv) it.episodeRuntime?.firstOrNull() else it.runtime
+                binding.movieRuntime.text = runtime?.let { min -> "${min / 60}s ${min % 60}dk" } ?: ""
+                binding.movieGenres.text = it.genres.joinToString(", ") { genre -> genre.name }
+            }
+
+            // UI Güncelleme - Credits
+            credits?.let {
+                val director = it.crew.find { member -> member.job == "Director" || member.job == "Executive Producer" }
+                binding.directorText.text = director?.let { d -> "Yönetmen: ${d.name}" } ?: ""
+                castAdapter.setList(it.cast.take(15)) // İlk 15 oyuncuyu göster
+            }
+
+            // UI Güncelleme - Benzerler
+            similarAdapter.setList(similar)
+        }
+    }
+
+    private fun setupTrailer(movieId: Int, isTv: Boolean) {
         val repository = RepositoryProvider.provideMovieRepository(this)
         
         binding.playTrailerButton.setOnClickListener {
             binding.playTrailerButton.isEnabled = false
             lifecycleScope.launch {
-                val videoKey = repository.getMovieVideoKey(movieId)
+                val videoKey = repository.getMovieVideoKey(movieId, isTv)
                 if (videoKey != null) {
-                    playYouTubeVideo(videoKey)
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/watch?v=" + videoKey))
+                    startActivity(intent)
+                    binding.playTrailerButton.isEnabled = true
                 } else {
-                    android.widget.Toast.makeText(this@MovieDetailActivity, "Fragman bulunamadı.", android.widget.Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MovieDetailActivity, "Fragman bulunamadı.", Toast.LENGTH_SHORT).show()
                     binding.playTrailerButton.isEnabled = true
                 }
             }
         }
-    }
-
-    private fun playYouTubeVideo(videoKey: String) {
-        binding.trailerWebview.visibility = View.VISIBLE
-        binding.trailerWebview.settings.javaScriptEnabled = true
-        binding.trailerWebview.webChromeClient = WebChromeClient()
-        binding.trailerWebview.webViewClient = WebViewClient()
-        
-        val html = """
-            <html>
-            <body style="margin:0;padding:0;">
-                <iframe width="100%" height="100%" src="https://www.youtube.com/embed/$videoKey?autoplay=1" frameborder="0" allowfullscreen></iframe>
-            </body>
-            </html>
-        """.trimIndent()
-        
-        binding.trailerWebview.loadData(html, "text/html", "utf-8")
     }
 }

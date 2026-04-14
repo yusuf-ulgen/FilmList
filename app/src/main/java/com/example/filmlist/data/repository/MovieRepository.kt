@@ -36,13 +36,45 @@ class MovieRepository(private val movieDao: MovieDao) {
         }
     }
 
-    suspend fun getMovieVideoKey(movieId: Int): String? {
+    suspend fun getMovieVideoKey(movieId: Int, isTv: Boolean = false): String? {
         return try {
-            val response = api.getMovieVideos(movieId, apiKey)
+            val response = if (isTv) {
+                api.getTvVideos(movieId, apiKey)
+            } else {
+                api.getMovieVideos(movieId, apiKey)
+            }
             response.results.firstOrNull { it.site == "YouTube" && it.type == "Trailer" }?.key
                 ?: response.results.firstOrNull { it.site == "YouTube" }?.key
         } catch (e: Exception) {
             null
+        }
+    }
+
+    suspend fun getMovieDetails(movieId: Int, isTv: Boolean = false): MovieDetails? {
+        return try {
+            if (isTv) api.getTvDetails(movieId, apiKey)
+            else api.getMovieDetails(movieId, apiKey)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun getMovieCredits(movieId: Int, isTv: Boolean = false): CreditsResponse? {
+        return try {
+            if (isTv) api.getTvCredits(movieId, apiKey)
+            else api.getMovieCredits(movieId, apiKey)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun getSimilarContent(movieId: Int, isTv: Boolean = false): List<Movie> {
+        return try {
+            val response = if (isTv) api.getSimilarTvShows(movieId, apiKey)
+            else api.getSimilarMovies(movieId, apiKey)
+            response.results
+        } catch (e: Exception) {
+            emptyList()
         }
     }
 
@@ -63,7 +95,7 @@ class MovieRepository(private val movieDao: MovieDao) {
     private fun Movie.toEntity() = MovieEntity(
         id = id,
         title = title,
-        overview = overview,
+        overview = overview ?: "",
         posterPath = posterPath,
         releaseDate = date,
         voteAverage = voteAverage

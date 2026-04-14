@@ -42,6 +42,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
             intent.putExtra("MOVIE_RATING", movie.voteAverage)
             intent.putExtra("MOVIE_DATE", movie.releaseDate)
             intent.putExtra("MOVIE_POSTER", movie.posterPath)
+            intent.putExtra("MEDIA_TYPE", movie.mediaType)
             holder.itemView.context.startActivity(intent)
         }
     }
