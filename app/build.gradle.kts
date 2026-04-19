@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.filmlist"
+    namespace = "com.yusufulgen.filmlist"
     compileSdk = 35
 
     val localProperties = Properties()
@@ -20,7 +20,7 @@ android {
     val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "YOUR_GEMINI_API_KEY_HERE"
 
     defaultConfig {
-        applicationId = "com.example.filmlist"
+        applicationId = "com.yusufulgen.filmlist"
         minSdk = 24
         targetSdk = 35
         versionCode = 1

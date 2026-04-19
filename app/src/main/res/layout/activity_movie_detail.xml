@@ -66,33 +66,53 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_star" />
 
                 <TextView
                     android:id="@+id/movie_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:textColor="@color/premium_gold"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    tools:text="⭐ 8.5" />
+                    tools:text="8.5" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_calendar"
+                    app:tint="@color/gray_text" />
 
                 <TextView
                     android:id="@+id/movie_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="6dp"
                     android:textColor="@color/gray_text"
                     android:textSize="14sp"
                     tools:text="2024" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="20dp"
+                    android:src="@drawable/ic_access_time"
+                    app:tint="@color/gray_text" />
 
                 <TextView
                     android:id="@+id/movie_runtime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="6dp"
                     android:textColor="@color/gray_text"
                     android:textSize="14sp"
                     tools:text="1s 45dk" />
@@ -102,10 +122,11 @@
                 android:id="@+id/movie_genres"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:textColor="@color/gray_text"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:fontFamily="sans-serif-medium"
+                android:alpha="0.8"
                 tools:text="Aksiyon, Macera, Bilim Kurgu" />
 
             <com.google.android.material.button.MaterialButton
@@ -152,8 +173,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Oyuncular"
-                android:textColor="@color/white"
+                android:text="Başrol Oyuncuları"
+                android:textColor="@color/secondary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -161,7 +182,7 @@
                 android:id="@+id/recyclerViewCast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_cast" />
@@ -169,9 +190,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Buna Benzer İçerikler"
-                android:textColor="@color/white"
+                android:layout_marginTop="32dp"
+                android:text="Önerilen İçerikler"
+                android:textColor="@color/secondary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -179,8 +200,8 @@
                 android:id="@+id/recyclerViewSimilar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_movie_mini" />
