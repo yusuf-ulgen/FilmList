@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -17,7 +18,7 @@ android {
     }
 
     val tmdbKey = localProperties.getProperty("TMDB_API_KEY") ?: "YOUR_TMDB_API_KEY_HERE"
-    val geminiKey = localProperties.getProperty("GEMINI_API_KEY") ?: "YOUR_GEMINI_API_KEY_HERE"
+
 
     defaultConfig {
         applicationId = "com.yusufulgen.filmlist"
@@ -29,7 +30,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "TMDB_API_KEY", "\"$tmdbKey\"")
-        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiKey\"")
+
     }
 
     buildTypes {
@@ -64,6 +65,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.preference.ktx)
     implementation(libs.androidx.swiperefreshlayout)
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    implementation("com.google.firebase:firebase-ai")
 
     // Room
     implementation(libs.androidx.room.runtime)
@@ -76,9 +80,6 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
-
-    // Gemini
-    implementation(libs.google.generativeai)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
