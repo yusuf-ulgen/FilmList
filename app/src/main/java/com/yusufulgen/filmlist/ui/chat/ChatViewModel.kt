@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-data class ChatMessage(val text: String, val isUser: Boolean)
+data class ChatMessage(val text: String, val isUser: Boolean, val isTyping: Boolean = false)
 
 class ChatViewModel(
     private val chatRepository: ChatRepository,

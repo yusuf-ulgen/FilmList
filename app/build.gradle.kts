@@ -18,6 +18,7 @@ android {
     }
 
     val tmdbKey = localProperties.getProperty("TMDB_API_KEY") ?: "YOUR_TMDB_API_KEY_HERE"
+    val omdbKey = localProperties.getProperty("OMDB_API_KEY") ?: "YOUR_OMDB_API_KEY_HERE"
 
 
     defaultConfig {
@@ -30,6 +31,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "TMDB_API_KEY", "\"$tmdbKey\"")
+        buildConfigField("String", "OMDB_API_KEY", "\"$omdbKey\"")
 
     }
 

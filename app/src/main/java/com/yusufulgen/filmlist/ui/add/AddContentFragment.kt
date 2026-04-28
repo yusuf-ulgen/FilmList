@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import coil.load
 import com.yusufulgen.filmlist.databinding.FragmentAddContentBinding
 import com.yusufulgen.filmlist.util.RepositoryProvider
@@ -147,10 +148,18 @@ class AddContentFragment : Fragment() {
 
     private fun setupViewModel() {
         val factory = RepositoryProvider.provideViewModelFactory(requireContext())
-        viewModel = ViewModelProvider(this, factory)[AddContentViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity(), factory)[AddContentViewModel::class.java]
     }
 
     private fun setupObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.navigationEvent.collectLatest { destinationId ->
+                Toast.makeText(requireContext(), "Lütfen önce bir liste oluşturun.", Toast.LENGTH_LONG).show()
+                val bottomNav = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(com.yusufulgen.filmlist.R.id.bottom_navigation)
+                bottomNav?.selectedItemId = destinationId
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.userLists.collectLatest { lists ->
                 val listNames = lists.map { it.name }

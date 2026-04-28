@@ -84,3 +84,40 @@ data class Crew(
     @SerializedName("job")
     val job: String
 )
+
+data class ExternalIdsResponse(
+    @SerializedName("imdb_id") val imdbId: String?,
+    @SerializedName("facebook_id") val facebookId: String?,
+    @SerializedName("instagram_id") val instagramId: String?,
+    @SerializedName("twitter_id") val twitterId: String?
+)
+
+data class WatchProvidersResponse(
+    @SerializedName("results") val results: Map<String, CountryProviders>
+)
+
+data class CountryProviders(
+    @SerializedName("link") val link: String,
+    @SerializedName("flatrate") val flatrate: List<Provider>?,
+    @SerializedName("rent") val rent: List<Provider>?,
+    @SerializedName("buy") val buy: List<Provider>?
+)
+
+data class Provider(
+    @SerializedName("provider_id") val providerId: Int,
+    @SerializedName("provider_name") val providerName: String,
+    @SerializedName("logo_path") val logoPath: String
+) {
+    fun getFullLogoUrl() = "https://image.tmdb.org/t/p/original$logoPath"
+}
+
+data class OmdbMovieResponse(
+    @SerializedName("imdbRating") val imdbRating: String?,
+    @SerializedName("Ratings") val ratings: List<OmdbRating>?,
+    @SerializedName("Metascore") val metascore: String?
+)
+
+data class OmdbRating(
+    @SerializedName("Source") val source: String,
+    @SerializedName("Value") val value: String
+)

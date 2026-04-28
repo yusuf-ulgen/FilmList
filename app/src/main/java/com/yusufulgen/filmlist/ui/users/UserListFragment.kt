@@ -25,6 +25,7 @@ class UserListFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: UserListViewModel
     private lateinit var listsAdapter: UserListsAdapter
+    private var hasRedirected = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

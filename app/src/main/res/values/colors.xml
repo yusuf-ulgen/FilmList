@@ -20,4 +20,6 @@
     <color name="gray_text">#868E96</color>
     <color name="premium_gold">#339AF0</color> <!-- Replaced with Sky Blue -->
     <color name="green">#51CF66</color>
+    <color name="imdb_yellow">#F5C518</color>
+    <color name="rt_red">#FA320A</color>
 </resources>

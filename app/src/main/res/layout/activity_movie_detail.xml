@@ -134,6 +134,94 @@
                 android:alpha="0.8"
                 tools:text="Aksiyon, Macera, Bilim Kurgu" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:id="@+id/imdb_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_rating_pill"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="IMDb"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:background="@color/imdb_yellow"
+                        android:paddingHorizontal="4dp"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/imdb_rating_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:textColor="@color/on_background"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="8.5" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rt_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/bg_rating_pill"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/ic_rt"
+                        app:tint="@color/rt_red" />
+                    <TextView
+                        android:id="@+id/rt_rating_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:textColor="@color/on_background"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:text="92%" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/watch_on_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="İzle"
+                android:textColor="@color/secondary"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewProviders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_provider" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/play_trailer_button"
                 android:layout_width="match_parent"

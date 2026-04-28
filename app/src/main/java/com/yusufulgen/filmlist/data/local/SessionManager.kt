@@ -60,6 +60,9 @@ class SessionManager(private val context: Context) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = false
             preferences[USER_ID] = -1L
+            preferences.remove(SELECTED_FILM_CATEGORIES)
+            preferences.remove(SELECTED_DIZI_CATEGORIES)
+            preferences.remove(PROFILE_IMAGE_URI)
         }
     }
 

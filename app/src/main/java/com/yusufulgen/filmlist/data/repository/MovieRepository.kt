@@ -7,7 +7,9 @@ import com.yusufulgen.filmlist.data.local.MovieEntity
 
 class MovieRepository(private val movieDao: MovieDao) {
     private val api = RetrofitInstance.tmdbApi
+    private val omdbApi = RetrofitInstance.omdbApi
     private val apiKey = BuildConfig.TMDB_API_KEY
+    private val omdbApiKey = BuildConfig.OMDB_API_KEY
 
     suspend fun getPopularMovies(page: Int = 1): Result<List<Movie>> {
         if (apiKey == "YOUR_TMDB_API_KEY_HERE") {
@@ -75,6 +77,32 @@ class MovieRepository(private val movieDao: MovieDao) {
             response.results
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+
+    suspend fun getExternalIds(movieId: Int, isTv: Boolean): ExternalIdsResponse? {
+        return try {
+            if (isTv) api.getTvExternalIds(movieId, apiKey)
+            else api.getMovieExternalIds(movieId, apiKey)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun getMovieRatings(imdbId: String): OmdbMovieResponse? {
+        return try {
+            omdbApi.getMovieRatings(imdbId, omdbApiKey)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun getWatchProviders(movieId: Int, isTv: Boolean): WatchProvidersResponse? {
+        return try {
+            if (isTv) api.getTvWatchProviders(movieId, apiKey)
+            else api.getMovieWatchProviders(movieId, apiKey)
+        } catch (e: Exception) {
+            null
         }
     }
 

@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 class MovieDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMovieDetailBinding
     private val castAdapter = CastAdapter()
+    private val providersAdapter = WatchProvidersAdapter()
     private lateinit var similarAdapter: SimilarMoviesAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +74,7 @@ class MovieDetailActivity : AppCompatActivity() {
             startActivity(intent)
         }
         binding.recyclerViewSimilar.adapter = similarAdapter
+        binding.recyclerViewProviders.adapter = providersAdapter
     }
 
     private fun fetchDetails(movieId: Int, isTv: Boolean) {
@@ -104,6 +106,49 @@ class MovieDetailActivity : AppCompatActivity() {
 
             // UI Güncelleme - Benzerler
             similarAdapter.setList(similar)
+
+            // 1 & 2: Ratings and Watch Providers
+            fetchExtraDetails(movieId, isTv)
+        }
+    }
+
+    private fun fetchExtraDetails(movieId: Int, isTv: Boolean) {
+        val repository = RepositoryProvider.provideMovieRepository(this)
+        lifecycleScope.launch {
+            // Watch Providers
+            val providersResponse = repository.getWatchProviders(movieId, isTv)
+            val trProviders = providersResponse?.results?.get("TR")
+            val allProviders = mutableListOf<com.yusufulgen.filmlist.data.remote.Provider>()
+            trProviders?.flatrate?.let { allProviders.addAll(it) }
+            
+            if (allProviders.isNotEmpty()) {
+                binding.watchOnTitle.visibility = View.VISIBLE
+                binding.recyclerViewProviders.visibility = View.VISIBLE
+                providersAdapter.setList(allProviders.distinctBy { it.providerId })
+            } else {
+                binding.watchOnTitle.visibility = View.GONE
+                binding.recyclerViewProviders.visibility = View.GONE
+            }
+
+            // External IDs (for IMDb)
+            val externalIds = repository.getExternalIds(movieId, isTv)
+            externalIds?.imdbId?.let { imdbId ->
+                val omdbData = repository.getMovieRatings(imdbId)
+                omdbData?.let { data ->
+                    // IMDb Rating
+                    if (!data.imdbRating.isNullOrBlank() && data.imdbRating != "N/A") {
+                        binding.imdbContainer.visibility = View.VISIBLE
+                        binding.imdbRatingText.text = data.imdbRating
+                    }
+
+                    // Rotten Tomatoes
+                    val rtRating = data.ratings?.find { it.source == "Rotten Tomatoes" }
+                    if (rtRating != null) {
+                        binding.rtContainer.visibility = View.VISIBLE
+                        binding.rtRatingText.text = rtRating.value
+                    }
+                }
+            }
         }
     }
 

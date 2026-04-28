@@ -16,8 +16,15 @@ class AddContentViewModel(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
 
+    private var hasRedirected = false
+    private val _navigationEvent = MutableSharedFlow<Int>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
+
     private val _userLists = MutableStateFlow<List<UserList>>(emptyList())
     val userLists = _userLists.asStateFlow()
+
+    private val _isListsLoaded = MutableStateFlow(false)
+    val isListsLoaded = _isListsLoaded.asStateFlow()
 
     private val _searchResults = MutableStateFlow<List<Movie>>(emptyList())
     val searchResults = _searchResults.asStateFlow()
@@ -36,8 +43,15 @@ class AddContentViewModel(
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
             if (userId != null) {
-                userDao.getUserLists(userId).collect {
-                    _userLists.value = it.filter { list -> list.id != -1L }
+                userDao.getUserLists(userId).collect { lists ->
+                    val customLists = lists.filter { list -> list.id != -1L }
+                    _userLists.value = customLists
+                    _isListsLoaded.value = true
+                    
+                    if (customLists.isEmpty() && !hasRedirected) {
+                        hasRedirected = true
+                        _navigationEvent.emit(com.yusufulgen.filmlist.R.id.navigation_list)
+                    }
                 }
             }
         }
@@ -58,12 +72,10 @@ class AddContentViewModel(
         }
     }
 
-    // Legacy method for AddFilmActivity compatibility
     fun saveContent(title: String, type: String, date: String, rating: Int, comment: String?, isSpoiler: Boolean, posterPath: String? = null) {
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
             if (userId != null && userId != -1L) {
-                // If no list is specified, use the first one or create default
                 val lists = userDao.getUserLists(userId).first()
                 val targetListId = lists.firstOrNull { it.id != -1L }?.id ?: run {
                     val defaultList = UserList(userId = userId, name = "İzlediklerim", orderIndex = 0)

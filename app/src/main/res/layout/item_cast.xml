@@ -17,20 +17,20 @@
         tools:src="@android:drawable/ic_menu_gallery" />
 
     <TextView
-        android:id="@+id/cast_name"
+        android:id="@+id/cast_character"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/white"
+        android:textColor="@color/secondary"
         android:textSize="12sp"
         android:textStyle="bold"
-        tools:text="Robert De Niro" />
+        tools:text="Travis Bickle" />
 
     <TextView
-        android:id="@+id/cast_character"
+        android:id="@+id/cast_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -39,6 +39,6 @@
         android:maxLines="1"
         android:textColor="@color/gray_text"
         android:textSize="10sp"
-        tools:text="Travis Bickle" />
+        tools:text="Robert De Niro" />
 
 </LinearLayout>

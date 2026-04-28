@@ -16,6 +16,8 @@ class AuthRepository(
         val hashedPassword = SecurityUtils.hashPassword(password)
         val newUser = User(email = email, passwordHash = hashedPassword)
         val userId = userDao.insertUser(newUser)
+        // Clear any old leftover session data before saving new one
+        sessionManager.clearSession()
         // Auto login after signup
         sessionManager.saveSession(userId, email, true)
         return true

@@ -13,6 +13,7 @@ import com.yusufulgen.filmlist.databinding.FragmentAiChatBinding
 import com.yusufulgen.filmlist.util.RepositoryProvider
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.isActive
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
@@ -86,17 +87,24 @@ class AiChatFragment : Fragment() {
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.messages.collectLatest { messages ->
-                adapter.setMessages(messages)
-                if (messages.isNotEmpty()) {
-                    binding.chatRecyclerView.scrollToPosition(messages.size - 1)
+            kotlinx.coroutines.flow.combine(viewModel.messages, viewModel.isLoading) { messages, isLoading ->
+                if (isLoading) {
+                    messages + ChatMessage("", false, isTyping = true)
+                } else {
+                    messages
+                }
+            }.collectLatest { finalMessages ->
+                adapter.setMessages(finalMessages)
+                if (finalMessages.isNotEmpty()) {
+                    binding.chatRecyclerView.post {
+                        binding.chatRecyclerView.smoothScrollToPosition(finalMessages.size - 1)
+                    }
                 }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.isLoading.collectLatest { isLoading ->
-                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
                 binding.sendButton.isEnabled = !isLoading
             }
         }
