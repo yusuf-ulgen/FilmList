@@ -18,5 +18,6 @@ data class UserList(
     val id: Long = 0,
     val userId: Long,
     val name: String,
-    val orderIndex: Int = 0
+    val orderIndex: Int = 0,
+    val imageUrl: String? = null
 )

@@ -43,7 +43,18 @@ class AuthLandingActivity : AppCompatActivity() {
             val isActiveInProcess = sessionManager.isSessionActiveInProcess()
 
             if (isLoggedIn) {
-                if (!rememberMe && !isActiveInProcess) {
+                // Veritabanı sıfırlanmışsa (migration vs) session geçerli kalsa da kullanıcı silinmiş olabilir.
+                val userId = sessionManager.userId.first() ?: -1L
+                val userExists = if (userId != -1L) {
+                    val db = com.yusufulgen.filmlist.data.local.AppDatabase.getDatabase(this@AuthLandingActivity)
+                    db.userDao().getUserById(userId).first() != null
+                } else false
+
+                if (!userExists) {
+                    // Kullanıcı veritabanında yok, oturumu temizle
+                    sessionManager.clearSession()
+                    binding.root.visibility = View.VISIBLE
+                } else if (!rememberMe && !isActiveInProcess) {
                     // Beni Hatırla işaretli değil ve uygulama yeni açıldı -> Oturumu temizle
                     sessionManager.clearSession()
                     binding.root.visibility = View.VISIBLE

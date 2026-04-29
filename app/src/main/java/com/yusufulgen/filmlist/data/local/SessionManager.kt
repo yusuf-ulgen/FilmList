@@ -19,6 +19,7 @@ class SessionManager(private val context: Context) {
         private val PROFILE_IMAGE_URI = stringPreferencesKey("profile_image_uri")
         private val SELECTED_FILM_CATEGORIES = stringSetPreferencesKey("selected_film_categories")
         private val SELECTED_DIZI_CATEGORIES = stringSetPreferencesKey("selected_dizi_categories")
+        private val COMMENTED_LIST_IMAGE_URI = stringPreferencesKey("commented_list_image_uri")
         
         @Volatile
         private var isSessionActiveInThisProcess = false
@@ -63,6 +64,7 @@ class SessionManager(private val context: Context) {
             preferences.remove(SELECTED_FILM_CATEGORIES)
             preferences.remove(SELECTED_DIZI_CATEGORIES)
             preferences.remove(PROFILE_IMAGE_URI)
+            preferences.remove(COMMENTED_LIST_IMAGE_URI)
         }
     }
 
@@ -73,6 +75,16 @@ class SessionManager(private val context: Context) {
     suspend fun saveProfileImage(uri: String) {
         context.dataStore.edit { preferences ->
             preferences[PROFILE_IMAGE_URI] = uri
+        }
+    }
+
+    val commentedListImageUri: Flow<String?> = context.dataStore.data.map { preferences ->
+        preferences[COMMENTED_LIST_IMAGE_URI]
+    }
+
+    suspend fun saveCommentedListImage(uri: String) {
+        context.dataStore.edit { preferences ->
+            preferences[COMMENTED_LIST_IMAGE_URI] = uri
         }
     }
 

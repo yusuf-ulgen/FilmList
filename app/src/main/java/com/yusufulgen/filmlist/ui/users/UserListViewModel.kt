@@ -31,10 +31,10 @@ class UserListViewModel(
         viewModelScope.launch {
             val userId = sessionManager.userId.first()
             if (userId != null && userId != -1L) {
-                userDao.getUserLists(userId).collect { lists ->
-                    // Tüm İçerikler (Yorum Yapılanlar) listesini sanal olarak en başa ekleyelim
-                    val allContentList = UserList(id = -1L, userId = userId, name = "Yorum Yapılanlar", orderIndex = -1)
-                    val transformedLists = listOf(allContentList) + lists
+                userDao.getUserLists(userId).combine(sessionManager.commentedListImageUri) { lists, commentedListImg ->
+                    val allContentList = UserList(id = -1L, userId = userId, name = "Yorum Yapılanlar", orderIndex = -1, imageUrl = commentedListImg)
+                    listOf(allContentList) + lists
+                }.collect { transformedLists ->
                     _userLists.value = transformedLists
                 }
             }
@@ -81,6 +81,17 @@ class UserListViewModel(
         viewModelScope.launch {
             val updatedList = userList.copy(name = newName)
             userDao.updateUserList(updatedList)
+        }
+    }
+
+    fun updateListImage(userList: UserList, imageUrl: String) {
+        viewModelScope.launch {
+            if (userList.id == -1L) {
+                sessionManager.saveCommentedListImage(imageUrl)
+            } else {
+                val updatedList = userList.copy(imageUrl = imageUrl)
+                userDao.updateUserList(updatedList)
+            }
         }
     }
 

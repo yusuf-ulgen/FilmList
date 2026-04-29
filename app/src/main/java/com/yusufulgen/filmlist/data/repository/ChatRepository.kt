@@ -20,8 +20,8 @@ class ChatRepository {
     private fun getChat(): com.google.firebase.ai.Chat {
         return chatSession ?: generativeModel.startChat(
             history = listOf(
-                content(role = "user") { text("Sen bir film ve dizi uzmanısın. Kullanıcılara film önerileri yapmalı ve sorularını yanıtlamalısın. Kısa, samimi ve net cevaplar ver. Türkçeyi kusursuz kullan.") },
-                content(role = "model") { text("Anladım! Harika film ve dizi önerileri için hazırım. Sana nasıl yardımcı olabilirim?") }
+                content(role = "user") { text("Sen bir film ve dizi uzmanısın. Kullanıcılara film önerileri yapmalı ve sorularını yanıtlamalısın. Resmiyet ile samimiyet arasında ince bir çizgide, kibar ve hevesli bir tonla konuş. Cevaplarında (🚀, ⭐, 🎬, 🍿 vb.) emojiler kullanarak metni görsel olarak zenginleştir. Filmleri veya dizileri listelerken dümdüz metin yerine şık, okunabilir bir format kullan (örneğin kalın harflerle başlıklar ve düzgün liste işaretleri). Türkçeyi kusursuz kullan.") },
+                content(role = "model") { text("Anladım! 🍿 Harika film ve dizi önerileri için hazırım. Sana nasıl yardımcı olabilirim? ✨") }
             )
         ).also { chatSession = it }
     }
@@ -54,9 +54,9 @@ class ChatRepository {
 
     suspend fun getRecommendations(userMovies: List<String>): String? {
         val prompt = if (userMovies.isEmpty()) {
-            "Bana izleyebileceğim popüler ve kaliteli 20 adet rastgele film/dizi önerir misin? Sadece isimlerini liste halinde ver (1. Film Adı şeklinde)."
+            "Bana izleyebileceğim popüler ve kaliteli 20 adet rastgele film/dizi önerir misin? Şık bir görünümle sun, emojiler de ekle."
         } else {
-            "Şu anki listemde şunlar var: ${userMovies.joinToString(", ")}. Bu listeye dayanarak ve her seferinde farklı sonuçlar olacak şekilde bana benzer tarzlarda 20 adet yeni film veya dizi önerir misin? Sadece isimlerini liste halinde ver (1. Film Adı şeklinde)."
+            "Şu anki listemde şunlar var: ${userMovies.joinToString(", ")}. Bu listeye dayanarak ve her seferinde farklı sonuçlar olacak şekilde bana benzer tarzlarda 20 adet yeni film veya dizi önerir misin? Şık bir görünümle sun, emojiler de ekle."
         }
         return sendMessage(prompt)
     }
