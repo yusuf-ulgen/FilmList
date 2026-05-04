@@ -8,7 +8,7 @@ import coil.transform.CircleCropTransformation
 import com.yusufulgen.filmlist.data.remote.Cast
 import com.yusufulgen.filmlist.databinding.ItemCastBinding
 
-class CastAdapter : RecyclerView.Adapter<CastAdapter.ViewHolder>() {
+class CastAdapter(private val onCastClick: (Int) -> Unit) : RecyclerView.Adapter<CastAdapter.ViewHolder>() {
     private var castList: List<Cast> = emptyList()
 
     fun setList(list: List<Cast>) {
@@ -18,7 +18,7 @@ class CastAdapter : RecyclerView.Adapter<CastAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemCastBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, onCastClick)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -27,7 +27,7 @@ class CastAdapter : RecyclerView.Adapter<CastAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = castList.size
 
-    class ViewHolder(private val binding: ItemCastBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemCastBinding, private val onCastClick: (Int) -> Unit) : RecyclerView.ViewHolder(binding.root) {
         fun bind(cast: Cast) {
             binding.castName.text = cast.name
             binding.castCharacter.text = cast.character
@@ -36,6 +36,9 @@ class CastAdapter : RecyclerView.Adapter<CastAdapter.ViewHolder>() {
                 transformations(CircleCropTransformation())
                 placeholder(android.R.drawable.ic_menu_gallery)
                 error(android.R.drawable.ic_menu_report_image)
+            }
+            binding.root.setOnClickListener {
+                onCastClick(cast.id)
             }
         }
     }

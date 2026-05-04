@@ -121,3 +121,20 @@ data class OmdbRating(
     @SerializedName("Source") val source: String,
     @SerializedName("Value") val value: String
 )
+
+data class PersonDetails(
+    @SerializedName("id") val id: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("biography") val biography: String?,
+    @SerializedName("birthday") val birthday: String?,
+    @SerializedName("deathday") val deathday: String?,
+    @SerializedName("place_of_birth") val placeOfBirth: String?,
+    @SerializedName("profile_path") val profilePath: String?,
+    @SerializedName("known_for_department") val knownFor: String?
+) {
+    fun getFullProfileUrl() = if (profilePath != null) "https://image.tmdb.org/t/p/h632$profilePath" else null
+}
+
+data class CombinedCreditsResponse(
+    @SerializedName("cast") val cast: List<Movie>
+)

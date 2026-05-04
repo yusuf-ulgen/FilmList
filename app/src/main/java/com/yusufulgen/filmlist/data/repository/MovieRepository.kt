@@ -122,6 +122,23 @@ class MovieRepository(private val movieDao: MovieDao) {
         }
     }
 
+    suspend fun getPersonDetails(personId: Int): PersonDetails? {
+        return try {
+            api.getPersonDetails(personId, apiKey)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    suspend fun getPersonCredits(personId: Int): List<Movie> {
+        return try {
+            val response = api.getPersonCombinedCredits(personId, apiKey)
+            response.cast.sortedByDescending { it.voteAverage }
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     suspend fun searchMovies(query: String): Result<List<Movie>> {
         return try {
             val response = api.searchMovies(apiKey, query)

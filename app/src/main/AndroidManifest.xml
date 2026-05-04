@@ -42,6 +42,11 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.detail.ActorDetailActivity"
+            android:theme="@style/Theme.FilmList"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.auth.SignUpActivity"
             android:theme="@style/Theme.FilmList"
             android:exported="false" />

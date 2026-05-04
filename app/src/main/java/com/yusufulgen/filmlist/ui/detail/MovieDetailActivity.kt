@@ -18,7 +18,12 @@ import kotlinx.coroutines.launch
 
 class MovieDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMovieDetailBinding
-    private val castAdapter = CastAdapter()
+    private val castAdapter = CastAdapter { personId ->
+        val intent = Intent(this, ActorDetailActivity::class.java).apply {
+            putExtra("PERSON_ID", personId)
+        }
+        startActivity(intent)
+    }
     private val providersAdapter = WatchProvidersAdapter()
     private lateinit var similarAdapter: SimilarMoviesAdapter
 

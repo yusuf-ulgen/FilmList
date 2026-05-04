@@ -108,6 +108,20 @@ interface TmdbApiService {
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String
     ): WatchProvidersResponse
+
+    @GET("person/{person_id}")
+    suspend fun getPersonDetails(
+        @Path("person_id") personId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "tr-TR"
+    ): PersonDetails
+
+    @GET("person/{person_id}/combined_credits")
+    suspend fun getPersonCombinedCredits(
+        @Path("person_id") personId: Int,
+        @Query("api_key") apiKey: String,
+        @Query("language") language: String = "tr-TR"
+    ): CombinedCreditsResponse
 }
 
 interface OmdbApiService {
