@@ -38,6 +38,22 @@ class MovieRepository(private val movieDao: MovieDao) {
         }
     }
 
+    suspend fun getPopularTvShows(page: Int = 1): Result<List<Movie>> {
+        if (apiKey == "YOUR_TMDB_API_KEY_HERE") {
+            return Result.failure(Exception("API anahtarı eksik! Lütfen local.properties dosyasını kontrol edin."))
+        }
+        return try {
+            val response = api.getPopularTvShows(apiKey, page = page)
+            if (response.results.isNotEmpty()) {
+                Result.success(response.results)
+            } else {
+                Result.failure(Exception("Hiç dizi bulunamadı."))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun getMovieVideoKey(movieId: Int, isTv: Boolean = false): String? {
         return try {
             val response = if (isTv) {

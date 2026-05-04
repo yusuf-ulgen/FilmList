@@ -24,6 +24,7 @@ import com.yusufulgen.filmlist.R
 import com.yusufulgen.filmlist.databinding.FragmentProfileBinding
 import com.yusufulgen.filmlist.util.RepositoryProvider
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
@@ -34,6 +35,7 @@ class ProfileFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: ProfileViewModel
+    private lateinit var adapter: ProfileGridAdapter
 
     private var cameraImageUri: Uri? = null
 
@@ -42,11 +44,9 @@ class ProfileFragment : Fragment() {
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            // URI'yi kalıcı olarak saklamak için kopyala
             val persistedUri = copyImageToInternal(it)
             if (persistedUri != null) {
                 viewModel.saveProfileImage(persistedUri.toString())
-                loadProfileImage(persistedUri.toString())
             }
         }
     }
@@ -57,7 +57,6 @@ class ProfileFragment : Fragment() {
     ) { success: Boolean ->
         if (success && cameraImageUri != null) {
             viewModel.saveProfileImage(cameraImageUri.toString())
-            loadProfileImage(cameraImageUri.toString())
         }
     }
 
@@ -93,32 +92,65 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupUI()
         setupViewModel()
         setupObservers()
+    }
 
-        // Profil resmine tıklama
-        binding.profileImage.setOnClickListener {
-            showImagePickerDialog()
+    private fun setupUI() {
+        adapter = ProfileGridAdapter(
+            onProfileImageClick = { showImagePickerDialog() }
+        )
+        
+        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(requireContext(), 3)
+        layoutManager.spanSizeLookup = object : androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (position == 0) 3 else 1
+            }
         }
+        
+        binding.watchedGridRecyclerView.layoutManager = layoutManager
+        binding.watchedGridRecyclerView.adapter = adapter
 
-        binding.logoutButton.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Çıkış Yap")
-                .setMessage("Hesabınızdan çıkış yapmak istediğinizden emin misiniz?")
-                .setPositiveButton("Evet, Çıkış Yap") { _, _ ->
-                    viewModel.logout()
-                    val intent = Intent(requireActivity(), AuthLandingActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        binding.settingsButton.setOnClickListener {
+            showSettingsMenu(it)
+        }
+    }
+
+    private fun showSettingsMenu(view: View) {
+        val popup = androidx.appcompat.widget.PopupMenu(requireContext(), view)
+        popup.menu.add(0, 1, 0, "Favori Türleri Düzenle")
+        popup.menu.add(0, 2, 1, "Çıkış Yap")
+        
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                1 -> {
+                    val intent = Intent(requireContext(), com.yusufulgen.filmlist.ui.categories.CategoriesActivity::class.java)
                     startActivity(intent)
+                    true
                 }
-                .setNegativeButton("İptal", null)
-                .show()
+                2 -> {
+                    showLogoutConfirmation()
+                    true
+                }
+                else -> false
+            }
         }
+        popup.show()
+    }
 
-        binding.editPreferencesButton.setOnClickListener {
-            val intent = Intent(requireContext(), com.yusufulgen.filmlist.ui.categories.CategoriesActivity::class.java)
-            startActivity(intent)
-        }
+    private fun showLogoutConfirmation() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Çıkış Yap")
+            .setMessage("Hesabınızdan çıkış yapmak istediğinizden emin misiniz?")
+            .setPositiveButton("Evet, Çıkış Yap") { _, _ ->
+                viewModel.logout()
+                val intent = Intent(requireActivity(), AuthLandingActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+            .setNegativeButton("İptal", null)
+            .show()
     }
 
     private fun showImagePickerDialog() {
@@ -197,19 +229,6 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun loadProfileImage(uriString: String) {
-        binding.profileImage.load(Uri.parse(uriString)) {
-            crossfade(true)
-            transformations(CircleCropTransformation())
-            error(R.drawable.ic_profile)
-        }
-        // Tint'i kaldır çünkü artık gerçek resim var
-        binding.profileImage.imageTintList = null
-        binding.profileImage.background = null
-        binding.profileImage.setPadding(0, 0, 0, 0)
-        binding.profileImage.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
-    }
-
     private fun setupViewModel() {
         val factory = RepositoryProvider.provideViewModelFactory(requireContext())
         viewModel = ViewModelProvider(this, factory)[ProfileViewModel::class.java]
@@ -217,28 +236,15 @@ class ProfileFragment : Fragment() {
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.username.collectLatest { name ->
-                binding.usernameText.text = name ?: "Kullanıcı"
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.stats.collectLatest { stats ->
-                stats?.let {
-                    binding.totalWatchedText.text = it.totalWatched.toString()
-                    binding.favoriteGenreText.text = it.favoriteGenre
-                    binding.showHabitText.text = it.showHabit
-                }
-            }
-        }
-
-        // Kaydedilmiş profil resmini yükle
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.profileImageUri.collectLatest { uriString ->
-                if (!uriString.isNullOrEmpty()) {
-                    loadProfileImage(uriString)
-                }
-            }
+            // Kombine gözlemleyici: Herhangi bir veri değiştiğinde adaptörü güncelle
+            combine(
+                viewModel.stats,
+                viewModel.username,
+                viewModel.profileImageUri,
+                viewModel.watchedContent
+            ) { stats, username, profileUri, watchedItems ->
+                adapter.updateData(stats, username, profileUri, watchedItems)
+            }.collect { }
         }
     }
 
@@ -247,3 +253,4 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 }
+

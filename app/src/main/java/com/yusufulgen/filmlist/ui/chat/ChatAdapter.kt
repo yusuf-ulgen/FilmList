@@ -58,7 +58,9 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val message = messages[position]
         
         if (holder is ChatViewHolder) {
-            val formattedText = message.text.replace(Regex("\\*\\*(.*?)\\*\\*"), "<b>$1</b>")
+            val formattedText = message.text
+                .replace("\n", "<br/>")
+                .replace(Regex("\\*\\*(.*?)\\*\\*"), "<b>$1</b>")
             holder.binding.messageText.text = HtmlCompat.fromHtml(formattedText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             
             val params = holder.binding.messageCard.layoutParams as ViewGroup.MarginLayoutParams

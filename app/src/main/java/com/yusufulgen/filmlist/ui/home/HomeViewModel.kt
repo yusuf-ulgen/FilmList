@@ -114,15 +114,27 @@ class HomeViewModel(
 
     private suspend fun loadPopularMovies() {
         _isLoading.value = true
-        repository.getPopularMovies(currentPage)
-            .onSuccess { movies ->
-                val newItems = movies.map { FeedItem.MovieDiscovery(it, false) }
-                _feedItems.value = _feedItems.value + newItems
-                currentPage++
-            }
-            .onFailure { exception ->
+        val moviesResult = repository.getPopularMovies(currentPage)
+        val tvShowsResult = repository.getPopularTvShows(currentPage)
+
+        val combinedList = mutableListOf<FeedItem>()
+        
+        moviesResult.onSuccess { movies ->
+            combinedList.addAll(movies.map { FeedItem.MovieDiscovery(it.copy(mediaType = "movie"), false) })
+        }
+        
+        tvShowsResult.onSuccess { tvShows ->
+            combinedList.addAll(tvShows.map { FeedItem.MovieDiscovery(it.copy(mediaType = "tv"), false) })
+        }
+
+        if (combinedList.isNotEmpty()) {
+            _feedItems.value = _feedItems.value + combinedList.shuffled()
+            currentPage++
+        } else {
+            moviesResult.onFailure { exception ->
                 _error.emit(exception.message ?: "Beklenmedik bir hata oluştu.")
             }
+        }
         _isLoading.value = false
     }
 }

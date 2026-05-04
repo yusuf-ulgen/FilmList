@@ -10,6 +10,9 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 
+import android.view.View
+import com.yusufulgen.filmlist.R
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
@@ -35,14 +38,31 @@ class MainActivity : AppCompatActivity() {
             windowInsets
         }
 
-        // Navigasyon kontrolcüsünü kur
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNavigation.setupWithNavController(navController)
 
+        // Bottom Navigation için padding ekle (İçeriğin arkada kalmaması için)
+        binding.bottomNavigation.post {
+            binding.navHostFragment.setPadding(0, 0, 0, binding.bottomNavigation.height)
+        }
+
         // Başlıkları sayfalara göre güncelle
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            // Reset header position when changing pages
+            binding.appBarLayout.setExpanded(true, true)
+            
+            val params = binding.titleContainer.layoutParams as com.google.android.material.appbar.AppBarLayout.LayoutParams
+            if (destination.id == R.id.navigation_home) {
+                params.scrollFlags = com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or 
+                                    com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS or 
+                                    com.google.android.material.appbar.AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
+            } else {
+                params.scrollFlags = 0 // No scroll
+            }
+            binding.titleContainer.layoutParams = params
+
             binding.navTitle.text = when (destination.id) {
                 R.id.navigation_home -> "Keşfet"
                 R.id.navigation_ai -> "Yapay Zeka"
@@ -62,4 +82,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun setHeaderTranslation(translationY: Float) {
+        binding.titleContainer.translationY = translationY
+    }
+
+    fun getHeaderHeight(): Int {
+        return binding.titleContainer.height
+    }
 }
+

@@ -17,6 +17,9 @@ class ProfileViewModel(
     private val _stats = MutableStateFlow<StatsRepository.UserStats?>(null)
     val stats = _stats.asStateFlow()
 
+    private val _watchedContent = MutableStateFlow<List<com.yusufulgen.filmlist.data.local.MediaContent>>(emptyList())
+    val watchedContent = _watchedContent.asStateFlow()
+
     private val _username = sessionManager.userEmail
     val username = _username
 
@@ -30,13 +33,15 @@ class ProfileViewModel(
         viewModelScope.launch {
             sessionManager.userId.collectLatest { userId ->
                 if (userId != null && userId != -1L) {
-                    userDao.getUserMediaContent(userId).collectLatest {
+                    userDao.getUserMediaContent(userId).collectLatest { content ->
+                        _watchedContent.value = content
                         _stats.value = statsRepository.getUserStats(userId)
                     }
                 }
             }
         }
     }
+
 
     fun refreshStats() {
         viewModelScope.launch {
