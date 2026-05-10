@@ -11,6 +11,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yusufulgen.filmlist.databinding.FragmentAiChatBinding
 import com.yusufulgen.filmlist.util.RepositoryProvider
+import com.yusufulgen.filmlist.util.TutorialManager
+import com.yusufulgen.filmlist.util.TutorialStep
+import com.yusufulgen.filmlist.R
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.isActive
@@ -38,6 +41,16 @@ class AiChatFragment : Fragment() {
         setupUI()
         setupViewModel()
         setupObservers()
+        showTutorial()
+    }
+
+    private fun showTutorial() {
+        val steps = listOf(
+            TutorialStep(null, "Yapay Zeka Uzmanı 🤖", "Sana en uygun film ve dizi önerilerini sunmak için buradayım!"),
+            TutorialStep(R.id.messageEditText, "Soru Sor ✍️", "İstediğin tarzda filmleri buraya yazabilirsin. Örneğin: 'Bana aksiyon dolu bilim kurgu filmleri öner'"),
+            TutorialStep(R.id.sendButton, "Gönder 🚀", "Mesajını yazdıktan sonra bu butona basarak bana ulaştırabilirsin.")
+        )
+        TutorialManager(requireActivity()).showTutorial("ai_tutorial", steps)
     }
 
     private fun setupUI() {

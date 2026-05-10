@@ -12,8 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.yusufulgen.filmlist.databinding.FragmentHomeBinding
 import com.yusufulgen.filmlist.util.RepositoryProvider
+import com.yusufulgen.filmlist.util.TutorialManager
+import com.yusufulgen.filmlist.util.TutorialStep
+import com.yusufulgen.filmlist.R
+import com.yusufulgen.filmlist.databinding.FragmentHomeBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -36,6 +39,18 @@ class   HomeFragment : Fragment() {
         setupUI()
         setupViewModel()
         setupObservers()
+        showTutorial()
+    }
+
+    private fun showTutorial() {
+        val steps = listOf(
+            TutorialStep(R.id.recyclerViewExplore, "Hoş Geldin! 👋", "Burada en popüler ve güncel filmleri keşfedebilirsin."),
+            TutorialStep(R.id.navigation_ai, "Yapay Zeka 🤖", "Hangi filmi izleyeceğine karar veremiyor musun? Yapay zeka senin için burada!"),
+            TutorialStep(R.id.navigation_add, "İçerik Ekle ➕", "İzlediğin filmleri veya dizileri hızlıca listene ekleyebilirsin."),
+            TutorialStep(R.id.navigation_list, "Listelerim 📂", "Oluşturduğun tüm özel listelere buradan ulaşabilirsin."),
+            TutorialStep(R.id.navigation_profile, "Profilin 👤", "Kendi istatistiklerini ve izlediğin tüm içerikleri buradan gör.")
+        )
+        TutorialManager(requireActivity()).showTutorial("home_tutorial", steps)
     }
 
     private fun setupUI() {

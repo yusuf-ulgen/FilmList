@@ -23,6 +23,8 @@ import com.yusufulgen.filmlist.AuthLandingActivity
 import com.yusufulgen.filmlist.R
 import com.yusufulgen.filmlist.databinding.FragmentProfileBinding
 import com.yusufulgen.filmlist.util.RepositoryProvider
+import com.yusufulgen.filmlist.util.TutorialManager
+import com.yusufulgen.filmlist.util.TutorialStep
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -95,6 +97,15 @@ class ProfileFragment : Fragment() {
         setupUI()
         setupViewModel()
         setupObservers()
+        showTutorial()
+    }
+
+    private fun showTutorial() {
+        val steps = listOf(
+            TutorialStep(R.id.watchedGridRecyclerView, "Profil Özeti 👤", "İzleme istatistiklerini ve son izlediğin içerikleri buradan takip edebilirsin."),
+            TutorialStep(R.id.settingsButton, "Ayarlar ⚙️", "Hesap çıkışı yapmak veya favori türlerini düzenlemek için ayarlara göz at.")
+        )
+        TutorialManager(requireActivity()).showTutorial("profile_tutorial", steps)
     }
 
     private fun setupUI() {

@@ -17,6 +17,8 @@ import com.yusufulgen.filmlist.R
 import com.yusufulgen.filmlist.data.local.*
 import com.yusufulgen.filmlist.databinding.FragmentUserListBinding
 import com.yusufulgen.filmlist.util.RepositoryProvider
+import com.yusufulgen.filmlist.util.TutorialManager
+import com.yusufulgen.filmlist.util.TutorialStep
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import android.Manifest
@@ -97,6 +99,15 @@ class UserListFragment : Fragment() {
         setupViewModel()
         setupUI()
         setupObservers()
+        showTutorial()
+    }
+
+    private fun showTutorial() {
+        val steps = listOf(
+            TutorialStep(R.id.listsRecyclerView, "Listelerin 📂", "Oluşturduğun tüm film ve dizi listelerini burada görebilirsin. Üzerine tıklayarak detaylara ulaşabilirsin."),
+            TutorialStep(R.id.addListFab, "Yeni Liste ➕", "Yeni bir kategori veya özel liste oluşturmak için bu butonu kullan.")
+        )
+        TutorialManager(requireActivity()).showTutorial("list_tutorial", steps)
     }
 
     private fun setupUI() {

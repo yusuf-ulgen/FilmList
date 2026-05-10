@@ -19,6 +19,8 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.yusufulgen.filmlist.databinding.FragmentAddContentBinding
 import com.yusufulgen.filmlist.util.RepositoryProvider
+import com.yusufulgen.filmlist.util.TutorialManager
+import com.yusufulgen.filmlist.util.TutorialStep
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -49,6 +51,17 @@ class AddContentFragment : Fragment() {
         setupObservers()
         setupListeners()
         setupDefaultDates()
+        showTutorial()
+    }
+
+    private fun showTutorial() {
+        val steps = listOf(
+            TutorialStep(com.yusufulgen.filmlist.R.id.listSelectionLayout, "Liste Seçimi 📁", "İçeriği hangi listene eklemek istediğini buradan seçebilirsin."),
+            TutorialStep(com.yusufulgen.filmlist.R.id.titleEditText, "Film Ara 🔍", "Eklemek istediğin filmin adını yazmaya başla, biz senin için bulalım!"),
+            TutorialStep(com.yusufulgen.filmlist.R.id.ratingBar, "Puan Ver ⭐", "İzlediğin içeriğe 1 ile 5 arasında bir puan verebilirsin."),
+            TutorialStep(com.yusufulgen.filmlist.R.id.saveButton, "Kaydet ✅", "Her şey hazırsa listene eklemek için butona basman yeterli.")
+        )
+        TutorialManager(requireActivity()).showTutorial("add_tutorial", steps)
     }
 
     private fun setupDefaultDates() {
