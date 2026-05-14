@@ -5,13 +5,12 @@
     android:layout_height="wrap_content"
     android:paddingVertical="4dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/typing_card"
+    <FrameLayout
+        android:id="@+id/typing_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="2dp"
-        app:cardBackgroundColor="@color/secondary"
+        android:elevation="2dp"
+        android:background="@drawable/bg_message_user"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -44,6 +43,6 @@
                 android:background="@drawable/bg_circle_white" />
 
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

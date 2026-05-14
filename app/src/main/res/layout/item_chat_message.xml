@@ -6,14 +6,15 @@
     android:layout_height="wrap_content"
     android:paddingVertical="4dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/message_card"
+    <FrameLayout
+        android:id="@+id/message_bubble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="0dp"
+        android:elevation="2dp"
+        android:clipToOutline="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintWidth_max="280dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,10 +22,11 @@
             android:id="@+id/message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="12dp"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="15sp"
             tools:text="Merhaba, nasıl yardımcı olabilirim?" />
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

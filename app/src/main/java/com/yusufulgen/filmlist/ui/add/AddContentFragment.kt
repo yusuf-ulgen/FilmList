@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import coil.load
+import com.yusufulgen.filmlist.MainActivity
 import com.yusufulgen.filmlist.databinding.FragmentAddContentBinding
 import com.yusufulgen.filmlist.util.RepositoryProvider
 import com.yusufulgen.filmlist.util.TutorialManager
@@ -82,17 +83,17 @@ class AddContentFragment : Fragment() {
             val selectedList = lists.find { it.name == selectedText } ?: lists.firstOrNull()
 
             if (lists.isEmpty()) {
-                Toast.makeText(requireContext(), "Lütfen önce bir liste oluşturun.", Toast.LENGTH_LONG).show()
+                com.yusufulgen.filmlist.MainActivity.showNotification(this@AddContentFragment, "Lütfen önce bir liste oluşturun.", true)
                 return@setOnClickListener
             }
 
             if (title.isBlank()) {
-                Toast.makeText(requireContext(), "Lütfen bir başlık girin.", Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.MainActivity.showNotification(this@AddContentFragment, "Lütfen bir başlık girin.", true)
                 return@setOnClickListener
             }
 
             if (selectedList == null) {
-                Toast.makeText(requireContext(), "Lütfen bir liste seçin.", Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.MainActivity.showNotification(this@AddContentFragment, "Lütfen bir liste seçin.", true)
                 return@setOnClickListener
             }
 
@@ -142,7 +143,7 @@ class AddContentFragment : Fragment() {
                     // binding.posterPreview.load(...)
                 }
 
-                Toast.makeText(requireContext(), "$selectedTitle seçildi ($selectedType)", Toast.LENGTH_SHORT).show()
+                MainActivity.showNotification(this@AddContentFragment, "$selectedTitle seçildi ($selectedType)")
             }
         }
     }
@@ -167,7 +168,7 @@ class AddContentFragment : Fragment() {
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.navigationEvent.collectLatest { destinationId ->
-                Toast.makeText(requireContext(), "Lütfen önce bir liste oluşturun.", Toast.LENGTH_LONG).show()
+                MainActivity.showNotification(this@AddContentFragment, "Lütfen önce bir liste oluşturun.", true)
                 val bottomNav = requireActivity().findViewById<com.google.android.material.bottomnavigation.BottomNavigationView>(com.yusufulgen.filmlist.R.id.bottom_navigation)
                 bottomNav?.selectedItemId = destinationId
             }
@@ -220,7 +221,7 @@ class AddContentFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.contentSaved.collectLatest { success ->
                 if (success) {
-                    Toast.makeText(requireContext(), "Başarıyla eklendi!", Toast.LENGTH_SHORT).show()
+                    MainActivity.showNotification(this@AddContentFragment, "Başarıyla eklendi!")
                     binding.titleEditText.text?.clear()
                     binding.commentEditText.text?.clear()
                     binding.ratingBar.rating = 0f
@@ -235,7 +236,7 @@ class AddContentFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.error.collectLatest { error ->
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                MainActivity.showNotification(this@AddContentFragment, error, true)
             }
         }
     }

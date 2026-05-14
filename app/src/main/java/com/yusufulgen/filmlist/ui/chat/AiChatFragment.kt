@@ -60,25 +60,27 @@ class AiChatFragment : Fragment() {
 
         // Handle Keyboard insets for the input area
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
-            val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
-            val systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-            
             binding.inputArea.updateLayoutParams<MarginLayoutParams> {
-                bottomMargin = if (imeInsets.bottom > 0) {
-                    // 1. imeInsets.bottom: Keyboard top from screen bottom
-                    // 2. systemBars.bottom: System navigation height
-                    // 3. 60dp: Our BottomNavigationView height
-                    // We subtract 2 and 3 because the fragment container already starts above them.
-                        
+                val systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
+                
+                // The fragment is already padded by the bottom navigation height in MainActivity.
+                // We just need to handle the keyboard height relative to that.
+                
+                if (imeInsets.bottom > 0) {
+                    // Keyboard is open. Calculate height above bottom navigation.
+                    // systemBars.bottom + bottomNavHeight (60dp) is the total padding.
                     val bottomNavHeightPx = (60 * resources.displayMetrics.density).toInt()
-                    val keyboardHeightAboveFragmentBottom = imeInsets.bottom - systemBars.bottom - bottomNavHeightPx
+                    val totalBottomPadding = systemBars.bottom + bottomNavHeightPx
                     
-                    // Final tiny gap for "bitişik" (adjacent) look
-                    val tinyGap = (0.5 * resources.displayMetrics.density).toInt()
-                    maxOf(tinyGap, keyboardHeightAboveFragmentBottom + tinyGap)
+                    val keyboardHeightAboveFragmentBottom = imeInsets.bottom - totalBottomPadding
+                    
+                    // Add a small gap to stay exactly above the keyboard
+                    val gap = (4 * resources.displayMetrics.density).toInt()
+                    bottomMargin = maxOf(gap, keyboardHeightAboveFragmentBottom + gap)
                 } else {
-                    // When keyboard is closed, standard margin from the nav bar
-                    (16 * resources.displayMetrics.density).toInt()
+                    // Keyboard is closed. Use a safe margin from the bottom navigation.
+                    bottomMargin = (20 * resources.displayMetrics.density).toInt()
                 }
             }
             windowInsets

@@ -13,6 +13,12 @@ import androidx.core.view.updatePadding
 import android.view.View
 import com.yusufulgen.filmlist.R
 import com.yusufulgen.filmlist.util.AppUpdateManager
+import android.widget.TextView
+import android.widget.ImageView
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -58,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // Reset header position when changing pages
             binding.appBarLayout.setExpanded(true, true)
+            binding.appBarLayout.isLifted = false
             
             val params = binding.titleContainer.layoutParams as com.google.android.material.appbar.AppBarLayout.LayoutParams
             if (destination.id == R.id.navigation_home) {
@@ -78,14 +85,31 @@ class MainActivity : AppCompatActivity() {
                 else -> ""
             }
 
-            // Keşfet sayfasında başlık alanını siyah yap (Görsellik için)
+            // Profile sayfasında ayarlar butonu göster
+            binding.settingsButtonMain.visibility = if (destination.id == R.id.navigation_profile) View.VISIBLE else View.GONE
+            binding.settingsButtonMain.setOnClickListener {
+                // ProfileFragment'a erişip menüyü göster
+                val currentFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                    ?.childFragmentManager?.fragments?.firstOrNull { it is com.yusufulgen.filmlist.ui.profile.ProfileFragment }
+                if (currentFragment is com.yusufulgen.filmlist.ui.profile.ProfileFragment) {
+                    currentFragment.showSettingsMenuFromActivity(it)
+                }
+            }
+
+            // Sayfa bazlı renk ve arka plan ayarları
             if (destination.id == R.id.navigation_home) {
                 binding.titleContainer.setBackgroundColor(getColor(R.color.black))
                 binding.navTitle.setTextColor(getColor(R.color.white))
+                binding.settingsButtonMain.visibility = View.GONE // Home'da gizle
             } else {
                 binding.titleContainer.setBackgroundColor(android.graphics.Color.TRANSPARENT)
                 binding.navTitle.setTextColor(getColor(R.color.black))
+                binding.settingsButtonMain.setColorFilter(getColor(R.color.black))
             }
+            
+            // Material3 AppBarLayout'un otomatik kararmasını (lift) engellemek için
+            binding.appBarLayout.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+            binding.appBarLayout.outlineProvider = null
         }
     }
 
@@ -95,6 +119,16 @@ class MainActivity : AppCompatActivity() {
 
     fun getHeaderHeight(): Int {
         return binding.titleContainer.height
+    }
+
+    fun showNotification(message: String, isError: Boolean = false) {
+        com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this, message, isError)
+    }
+
+    companion object {
+        fun showNotification(fragment: androidx.fragment.app.Fragment, message: String, isError: Boolean = false) {
+            (fragment.requireActivity() as? MainActivity)?.showNotification(message, isError)
+        }
     }
 }
 

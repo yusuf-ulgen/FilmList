@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
             viewModel.loginResult.collectLatest { success ->
                 if (success && !navigated) {
                     navigated = true
-                    Toast.makeText(this@LoginActivity, "Giriş Başarılı!", Toast.LENGTH_SHORT).show()
+                    com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this@LoginActivity, "Giriş Başarılı!")
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.error.collectLatest { errorMessage ->
-                Toast.makeText(this@LoginActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this@LoginActivity, errorMessage, true)
             }
         }
     }

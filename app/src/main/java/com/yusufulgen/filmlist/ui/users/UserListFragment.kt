@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.yusufulgen.filmlist.MainActivity
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +27,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -156,72 +159,118 @@ class UserListFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.error.collectLatest { error ->
-                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                MainActivity.showNotification(this@UserListFragment, error, true)
             }
         }
     }
 
     private fun showCreateListDialog() {
-        val editText = EditText(requireContext()).apply {
-            hint = "Liste Adı"
-            inputType = InputType.TYPE_CLASS_TEXT
-        }
-        
-        AlertDialog.Builder(requireContext())
-            .setTitle("Yeni Liste Oluştur")
-            .setView(editText)
-            .setPositiveButton("Oluştur") { _, _ ->
-                val name = editText.text.toString()
-                if (name.isNotBlank()) {
-                    viewModel.createList(name)
-                }
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_create_list, null)
+        val dialog = AlertDialog.Builder(requireContext(), R.style.CustomDialogTheme)
+            .setView(dialogView)
+            .create()
+
+        dialogView.findViewById<MaterialButton>(R.id.createButton).setOnClickListener {
+            val name = dialogView.findViewById<TextInputEditText>(R.id.listNameEditText).text.toString()
+            if (name.isNotBlank()) {
+                viewModel.createList(name)
+                dialog.dismiss()
+                MainActivity.showNotification(this, "Liste oluşturuldu: $name")
+            } else {
+                MainActivity.showNotification(this, "Lütfen bir isim girin", true)
             }
-            .setNegativeButton("İptal", null)
-            .show()
+        }
+
+        dialogView.findViewById<MaterialButton>(R.id.cancelButton).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        applyDialogWidth(dialog)
     }
 
     private fun showListActions(userList: UserList) {
-        val options = arrayOf("Düzenle", "Sil")
-        AlertDialog.Builder(requireContext())
-            .setTitle(userList.name)
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> showEditListDialog(userList)
-                    1 -> showDeleteListConfirm(userList)
-                }
-            }
-            .show()
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_list_actions, null)
+        val dialog = AlertDialog.Builder(requireContext(), R.style.CustomDialogTheme)
+            .setView(dialogView)
+            .create()
+
+        dialogView.findViewById<android.widget.TextView>(R.id.dialogTitle).text = userList.name
+
+        dialogView.findViewById<View>(R.id.editAction).setOnClickListener {
+            dialog.dismiss()
+            showEditListDialog(userList)
+        }
+
+        dialogView.findViewById<View>(R.id.deleteAction).setOnClickListener {
+            dialog.dismiss()
+            showDeleteListConfirm(userList)
+        }
+
+        dialog.show()
+        applyDialogWidth(dialog)
     }
 
     private fun showEditListDialog(userList: UserList) {
-        val editText = EditText(requireContext()).apply {
-            setText(userList.name)
-            inputType = InputType.TYPE_CLASS_TEXT
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_create_list, null)
+        val dialog = AlertDialog.Builder(requireContext(), R.style.CustomDialogTheme)
+            .setView(dialogView)
+            .create()
+
+        dialogView.findViewById<android.widget.TextView>(R.id.dialogTitle)?.text = "Listeyi Düzenle"
+        
+        val editText = dialogView.findViewById<TextInputEditText>(R.id.listNameEditText)
+        editText.setText(userList.name)
+        
+        val createButton = dialogView.findViewById<MaterialButton>(R.id.createButton)
+        createButton.text = "Kaydet"
+        createButton.setOnClickListener {
+            val newName = editText.text.toString()
+            if (newName.isNotBlank() && newName != userList.name) {
+                viewModel.updateList(userList, newName)
+                dialog.dismiss()
+                MainActivity.showNotification(this, "Liste güncellendi")
+            } else {
+                dialog.dismiss()
+            }
         }
 
-        AlertDialog.Builder(requireContext())
-            .setTitle("Listeyi Düzenle")
-            .setView(editText)
-            .setPositiveButton("Kaydet") { _, _ ->
-                val newName = editText.text.toString()
-                if (newName.isNotBlank() && newName != userList.name) {
-                    viewModel.updateList(userList, newName)
-                }
-            }
-            .setNegativeButton("İptal", null)
-            .show()
+        dialogView.findViewById<MaterialButton>(R.id.cancelButton).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        applyDialogWidth(dialog)
     }
 
     private fun showDeleteListConfirm(userList: UserList) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Listeyi Sil")
-            .setMessage("${userList.name} listesini ve içindeki tüm içerikleri silmek istediğinize emin misiniz?")
-            .setPositiveButton("Sil") { _, _ ->
-                viewModel.deleteList(userList)
-                Toast.makeText(requireContext(), "Liste silindi.", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("İptal", null)
-            .show()
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_confirm_delete, null)
+        val dialog = AlertDialog.Builder(requireContext(), R.style.CustomDialogTheme)
+            .setView(dialogView)
+            .create()
+
+        dialogView.findViewById<android.widget.TextView>(R.id.confirmMessage).text = 
+            "${userList.name} listesini silmek istediğinizden emin misiniz?"
+
+        dialogView.findViewById<MaterialButton>(R.id.confirmButton).setOnClickListener {
+            viewModel.deleteList(userList)
+            dialog.dismiss()
+            MainActivity.showNotification(this, "Liste silindi")
+        }
+
+        dialogView.findViewById<MaterialButton>(R.id.cancelButton).setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+        applyDialogWidth(dialog)
+    }
+
+    private fun applyDialogWidth(dialog: AlertDialog) {
+        dialog.window?.setLayout(
+            (320 * resources.displayMetrics.density).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 
     private fun showImagePickerDialog() {

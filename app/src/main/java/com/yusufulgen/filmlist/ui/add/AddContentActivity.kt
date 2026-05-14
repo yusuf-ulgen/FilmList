@@ -69,7 +69,7 @@ class AddContentActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.contentSaved.collectLatest { success ->
                 if (success) {
-                    Toast.makeText(this@AddContentActivity, "Film başarıyla kaydedildi!", Toast.LENGTH_SHORT).show()
+                    com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this@AddContentActivity, "Film başarıyla kaydedildi!")
                     finish()
                 }
             }
@@ -77,7 +77,7 @@ class AddContentActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.error.collectLatest { error ->
-                Toast.makeText(this@AddContentActivity, error, Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this@AddContentActivity, error, true)
             }
         }
     }
@@ -107,7 +107,7 @@ class AddContentActivity : AppCompatActivity() {
             else -> 0
         }
         if (day < 1 || day > daysInMonth) {
-            Toast.makeText(this, "Geçersiz tarih! Bu ayda sadece $daysInMonth gün var.", Toast.LENGTH_SHORT).show()
+            com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this, "Geçersiz tarih! Bu ayda sadece $daysInMonth gün var.", true)
             return false
         }
         return true
@@ -118,21 +118,21 @@ class AddContentActivity : AppCompatActivity() {
     }
 
     private fun validateInputs(): Boolean {
-        val filmName = findViewById<AppCompatEditText>(R.id.search_bar).text.toString().trim()
+        val filmName = findViewById<androidx.appcompat.widget.AppCompatEditText>(R.id.search_bar).text.toString().trim()
         val day = daySpinner.selectedItemPosition + 1
         val month = monthSpinner.selectedItemPosition + 1
         val year = yearSpinner.selectedItemPosition + 1995
         val rating = ratingBar.progress
 
         if (filmName.isEmpty()) {
-            Toast.makeText(this, "Film adı girilmelidir!", Toast.LENGTH_SHORT).show()
+            com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this, "Film adı girilmelidir!", true)
             return false
         }
 
         if (!validateDate(day, month, year)) return false
 
         if (rating == 0) {
-            Toast.makeText(this, "Puanlama yapın!", Toast.LENGTH_SHORT).show()
+            com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this, "Puanlama yapın!", true)
             return false
         }
         return true

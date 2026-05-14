@@ -42,7 +42,7 @@ class SignUpActivity : AppCompatActivity() {
             val dob = binding.dogumyiliId.text.toString()
 
             if (!Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
-                Toast.makeText(this, "Lütfen geçerli bir e-posta adresi giriniz.", Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this, "Lütfen geçerli bir e-posta adresi giriniz.", true)
                 return@setOnClickListener
             }
 
@@ -51,24 +51,24 @@ class SignUpActivity : AppCompatActivity() {
             val minYear = currentYear - 100
 
             if (!dob.matches(dateRegex)) {
-                Toast.makeText(this, "Doğum tarihi formatı geçerli değil. Lütfen 'dd.mm.yyyy' formatında giriniz.", Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this, "Doğum tarihi formatı geçerli değil. Lütfen 'dd.mm.yyyy' formatında giriniz.", true)
                 return@setOnClickListener
             }
 
             val (day, month, year) = dob.split(".").map { it.toInt() }
 
             if (day < 1 || day > 31 || month < 1 || month > 12 || year < minYear || year > currentYear) {
-                Toast.makeText(this, "Geçerli bir tarih giriniz.", Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this, "Geçerli bir tarih giriniz.", true)
                 return@setOnClickListener
             }
 
             if (!isValidDayForMonth(day, month, year)) {
-                Toast.makeText(this, "Geçersiz bir gün girildi. Lütfen geçerli bir tarihi giriniz.", Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this, "Geçersiz bir gün girildi. Lütfen geçerli bir tarihi giriniz.", true)
                 return@setOnClickListener
             }
 
             if (selectedGender == "Seçiniz") {
-                Toast.makeText(this, "Cinsiyet seçmeniz gerekmektedir!", Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this, "Cinsiyet seçmeniz gerekmektedir!", true)
                 return@setOnClickListener
             }
 
@@ -118,7 +118,7 @@ class SignUpActivity : AppCompatActivity() {
             viewModel.signUpResult.collectLatest { success ->
                 if (success && !navigated) {
                     navigated = true
-                    Toast.makeText(this@SignUpActivity, "Kayıt Başarılı! Hoş geldiniz.", Toast.LENGTH_SHORT).show()
+                    com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this@SignUpActivity, "Kayıt Başarılı! Hoş geldiniz.")
                     val intent = Intent(this@SignUpActivity, com.yusufulgen.filmlist.ui.categories.CategoriesActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
@@ -129,7 +129,7 @@ class SignUpActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.error.collectLatest { errorMessage ->
-                Toast.makeText(this@SignUpActivity, errorMessage, Toast.LENGTH_SHORT).show()
+                com.yusufulgen.filmlist.util.NotificationHelper.showNotification(this@SignUpActivity, errorMessage, true)
             }
         }
     }

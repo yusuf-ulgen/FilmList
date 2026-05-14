@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
@@ -67,6 +69,19 @@ class AppUpdateManager(private val context: Context) {
         }
 
         binding.closeButton.setOnClickListener { dialog.dismiss() }
+        
+        // Handle system insets for the dialog (Edge-to-edge)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                insets.bottom + (24 * context.resources.displayMetrics.density).toInt()
+            )
+            windowInsets
+        }
+
         dialog.show()
     }
 

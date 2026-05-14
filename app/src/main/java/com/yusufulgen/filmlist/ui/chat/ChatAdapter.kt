@@ -13,6 +13,11 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.ShapeAppearanceModel
+import android.content.res.ColorStateList
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -64,7 +69,7 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 .replace(Regex("\\*\\*(.*?)\\*\\*"), "<b>$1</b>")
             holder.binding.messageText.text = HtmlCompat.fromHtml(formattedText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             
-            val params = holder.binding.messageCard.layoutParams as ConstraintLayout.LayoutParams
+            val params = holder.binding.messageBubble.layoutParams as ConstraintLayout.LayoutParams
             val context = holder.itemView.context
             val density = context.resources.displayMetrics.density
             
@@ -72,17 +77,21 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 params.marginStart = (64 * density).toInt()
                 params.marginEnd = (16 * density).toInt()
                 params.horizontalBias = 1.0f
-                holder.binding.messageCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.secondary))
+                holder.binding.messageBubble.setBackgroundResource(R.drawable.bg_message_user)
                 holder.binding.messageText.setTextColor(ContextCompat.getColor(context, R.color.white))
             } else {
                 params.marginStart = (16 * density).toInt()
                 params.marginEnd = (64 * density).toInt()
                 params.horizontalBias = 0.0f
-                holder.binding.messageCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.surface))
+                holder.binding.messageBubble.setBackgroundResource(R.drawable.bg_message_bot)
                 holder.binding.messageText.setTextColor(ContextCompat.getColor(context, R.color.black))
             }
-            holder.binding.messageCard.layoutParams = params
+            
+            holder.binding.messageBubble.clipToOutline = true
+            holder.binding.messageBubble.layoutParams = params
         } else if (holder is TypingViewHolder) {
+            holder.binding.typingBubble.setBackgroundResource(R.drawable.bg_message_user)
+            holder.binding.typingBubble.clipToOutline = true
             startTypingAnimation(holder)
         }
     }

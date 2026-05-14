@@ -103,7 +103,7 @@ class ProfileFragment : Fragment() {
     private fun showTutorial() {
         val steps = listOf(
             TutorialStep(R.id.watchedGridRecyclerView, "Profil Özeti 👤", "İzleme istatistiklerini ve son izlediğin içerikleri buradan takip edebilirsin."),
-            TutorialStep(R.id.settingsButton, "Ayarlar ⚙️", "Hesap çıkışı yapmak veya favori türlerini düzenlemek için ayarlara göz at.")
+            TutorialStep(R.id.settingsButtonMain, "Ayarlar ⚙️", "Hesap çıkışı yapmak veya favori türlerini düzenlemek için ayarlara göz at.")
         )
         TutorialManager(requireActivity()).showTutorial("profile_tutorial", steps)
     }
@@ -122,42 +122,35 @@ class ProfileFragment : Fragment() {
         
         binding.watchedGridRecyclerView.layoutManager = layoutManager
         binding.watchedGridRecyclerView.adapter = adapter
-
-        binding.settingsButton.setOnClickListener {
-            showSettingsMenu(it)
-        }
     }
 
-    private fun showSettingsMenu(view: View) {
-        val popup = androidx.appcompat.widget.PopupMenu(requireContext(), view)
-        popup.menu.add(0, 1, 0, "Favori Türleri Düzenle")
-        popup.menu.add(0, 3, 1, "Üreticinin Diğer İçerikleri")
-        popup.menu.add(0, 2, 2, "Çıkış Yap")
-        
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                1 -> {
-                    val intent = Intent(requireContext(), com.yusufulgen.filmlist.ui.categories.CategoriesActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-                2 -> {
-                    showLogoutConfirmation()
-                    true
-                }
-                3 -> {
-                    val developerName = "Yusuf Ulgen"
-                    try {
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:$developerName")))
-                    } catch (e: Exception) {
-                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/developer?id=Yusuf+Ulgen")))
-                    }
-                    true
-                }
-                else -> false
+    fun showSettingsMenuFromActivity(view: View) {
+        val bottomSheet = com.google.android.material.bottomsheet.BottomSheetDialog(requireContext(), R.style.CustomDialogTheme)
+        val dialogView = layoutInflater.inflate(R.layout.bottom_sheet_profile_settings, null)
+        bottomSheet.setContentView(dialogView)
+
+        dialogView.findViewById<View>(R.id.editCategoriesAction).setOnClickListener {
+            bottomSheet.dismiss()
+            val intent = Intent(requireContext(), com.yusufulgen.filmlist.ui.categories.CategoriesActivity::class.java)
+            startActivity(intent)
+        }
+
+        dialogView.findViewById<View>(R.id.otherAppsAction).setOnClickListener {
+            bottomSheet.dismiss()
+            val developerName = "Yusuf Ulgen"
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:$developerName")))
+            } catch (e: Exception) {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/developer?id=Yusuf+Ulgen")))
             }
         }
-        popup.show()
+
+        dialogView.findViewById<View>(R.id.logoutAction).setOnClickListener {
+            bottomSheet.dismiss()
+            showLogoutConfirmation()
+        }
+
+        bottomSheet.show()
     }
 
     private fun showLogoutConfirmation() {
