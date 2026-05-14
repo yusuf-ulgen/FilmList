@@ -22,4 +22,6 @@
     <color name="green">#51CF66</color>
     <color name="imdb_yellow">#F5C518</color>
     <color name="rt_red">#FA320A</color>
+    <color name="cream_bg">#FFFBE6</color>
+    <color name="cream_dark">#F5E6CC</color>
 </resources>

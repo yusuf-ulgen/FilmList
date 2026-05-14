@@ -12,6 +12,7 @@ import com.yusufulgen.filmlist.databinding.ItemChatTypingBinding
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import androidx.constraintlayout.widget.ConstraintLayout
 
 class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -63,17 +64,20 @@ class ChatAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 .replace(Regex("\\*\\*(.*?)\\*\\*"), "<b>$1</b>")
             holder.binding.messageText.text = HtmlCompat.fromHtml(formattedText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             
-            val params = holder.binding.messageCard.layoutParams as ViewGroup.MarginLayoutParams
+            val params = holder.binding.messageCard.layoutParams as ConstraintLayout.LayoutParams
             val context = holder.itemView.context
+            val density = context.resources.displayMetrics.density
             
             if (message.isUser) {
-                params.marginStart = 64
-                params.marginEnd = 0
+                params.marginStart = (64 * density).toInt()
+                params.marginEnd = (16 * density).toInt()
+                params.horizontalBias = 1.0f
                 holder.binding.messageCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.secondary))
                 holder.binding.messageText.setTextColor(ContextCompat.getColor(context, R.color.white))
             } else {
-                params.marginStart = 0
-                params.marginEnd = 64
+                params.marginStart = (16 * density).toInt()
+                params.marginEnd = (64 * density).toInt()
+                params.horizontalBias = 0.0f
                 holder.binding.messageCard.setCardBackgroundColor(ContextCompat.getColor(context, R.color.surface))
                 holder.binding.messageText.setTextColor(ContextCompat.getColor(context, R.color.black))
             }

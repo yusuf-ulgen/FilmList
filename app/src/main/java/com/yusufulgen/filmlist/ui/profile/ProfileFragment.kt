@@ -131,7 +131,8 @@ class ProfileFragment : Fragment() {
     private fun showSettingsMenu(view: View) {
         val popup = androidx.appcompat.widget.PopupMenu(requireContext(), view)
         popup.menu.add(0, 1, 0, "Favori Türleri Düzenle")
-        popup.menu.add(0, 2, 1, "Çıkış Yap")
+        popup.menu.add(0, 3, 1, "Üreticinin Diğer İçerikleri")
+        popup.menu.add(0, 2, 2, "Çıkış Yap")
         
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -142,6 +143,15 @@ class ProfileFragment : Fragment() {
                 }
                 2 -> {
                     showLogoutConfirmation()
+                    true
+                }
+                3 -> {
+                    val developerName = "Yusuf Ulgen"
+                    try {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=pub:$developerName")))
+                    } catch (e: Exception) {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/developer?id=Yusuf+Ulgen")))
+                    }
                     true
                 }
                 else -> false

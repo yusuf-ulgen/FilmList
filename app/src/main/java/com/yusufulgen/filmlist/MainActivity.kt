@@ -12,6 +12,7 @@ import androidx.core.view.updatePadding
 
 import android.view.View
 import com.yusufulgen.filmlist.R
+import com.yusufulgen.filmlist.util.AppUpdateManager
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -42,6 +43,11 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNavigation.setupWithNavController(navController)
+
+        // Check for updates and release notes
+        val updateManager = AppUpdateManager(this)
+        updateManager.checkAndShowReleaseNotes()
+        updateManager.checkForUpdates()
 
         // Bottom Navigation için padding ekle (İçeriğin arkada kalmaması için)
         binding.bottomNavigation.post {
