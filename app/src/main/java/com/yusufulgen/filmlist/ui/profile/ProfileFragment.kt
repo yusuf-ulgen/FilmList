@@ -41,9 +41,9 @@ class ProfileFragment : Fragment() {
 
     private var cameraImageUri: Uri? = null
 
-    // Galeriden seçim sonucu
-    private val galleryLauncher = registerForActivityResult(
-        ActivityResultContracts.GetContent()
+    // Galeriden seçim sonucu (Yeni Photo Picker - İzin Gerekmez)
+    private val pickMediaLauncher = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         uri?.let {
             val persistedUri = copyImageToInternal(it)
@@ -73,16 +73,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    // Galeri izni sonucu
-    private val storagePermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            openGallery()
-        } else {
-            Toast.makeText(requireContext(), "Depolama izni gerekli.", Toast.LENGTH_SHORT).show()
-        }
-    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -174,7 +165,7 @@ class ProfileFragment : Fragment() {
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> checkCameraPermissionAndOpen()
-                    1 -> checkStoragePermissionAndOpen()
+                    1 -> openGallery()
                 }
             }
             .setNegativeButton("İptal", null)
@@ -191,21 +182,7 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun checkStoragePermissionAndOpen() {
-        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Manifest.permission.READ_MEDIA_IMAGES
-        } else {
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        }
 
-        if (ContextCompat.checkSelfPermission(requireContext(), permission)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            openGallery()
-        } else {
-            storagePermissionLauncher.launch(permission)
-        }
-    }
 
     private fun openCamera() {
         val photoFile = createImageFile()
@@ -218,7 +195,11 @@ class ProfileFragment : Fragment() {
     }
 
     private fun openGallery() {
-        galleryLauncher.launch("image/*")
+        pickMediaLauncher.launch(
+            androidx.activity.result.PickVisualMediaRequest(
+                ActivityResultContracts.PickVisualMedia.ImageOnly
+            )
+        )
     }
 
     private fun createImageFile(): File {

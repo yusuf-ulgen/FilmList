@@ -1,9 +1,8 @@
 {
-  "versionCode": 5,
-  "versionName": "1.4",
+  "versionCode": 7,
+  "versionName": "1.6",
   "notes": [
-    "1) Yapay zeka sohbet arayüzü iyileştirildi.\n",
-    "2) Mesaj balonları daha modern bir görünüme kavuşturuldu.\n",
-    "3) Güncellemelerden sonraki ilk açılışta güncelleme notlarını gösteren sistem eklendi."
+    "1) Google Play politika uyumluluğu için galeri izinleri kaldırıldı.",
+    "2) Uygulama performansı ve stabilitesi artırıldı."
   ]
 }
