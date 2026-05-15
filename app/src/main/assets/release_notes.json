@@ -1,10 +1,9 @@
 {
-  "versionCode": 2,
-  "versionName": "1.0.1",
+  "versionCode": 5,
+  "versionName": "1.4",
   "notes": [
-    "Yapay zeka sohbet arayüzü iyileştirildi.\n",
-    "Mesaj balonları daha modern bir görünüme kavuşturuldu.\n",
-    "Performans iyileştirmeleri yapıldı.\n",
-    "Hata düzeltmeleri gerçekleştirildi."
+    "1) Yapay zeka sohbet arayüzü iyileştirildi.\n",
+    "2) Mesaj balonları daha modern bir görünüme kavuşturuldu.\n",
+    "3) Güncellemelerden sonraki ilk açılışta güncelleme notlarını gösteren sistem eklendi."
   ]
 }
